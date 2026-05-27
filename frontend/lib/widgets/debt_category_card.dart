@@ -457,6 +457,7 @@ class DriftDebtRow extends StatelessWidget {
 
   static const Color _textPrimary = Color(0xFFF1F5F9);
   static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _driftAccent = Color(0xFFA855F7);
 
   @override
   Widget build(BuildContext context) {
@@ -485,17 +486,34 @@ class DriftDebtRow extends StatelessWidget {
             color: _textSecondary,
           ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          '⚠️ Either merge the PR or reopen the task',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w700,
-            color: _textSecondary,
-          ),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '⚠️',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.25,
+                fontWeight: FontWeight.w800,
+                color: _driftAccent,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                debt.contradiction,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  height: 1.25,
+                  fontWeight: FontWeight.w800,
+                  color: _driftAccent.withValues(alpha: 0.95),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

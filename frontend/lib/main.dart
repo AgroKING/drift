@@ -78,10 +78,6 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
               .map((StalenessDebt d) => StalenessDebtRow(debt: d))
               .toList();
 
-          final List<Widget> driftItems = report.debts.drift
-              .map((DriftDebt d) => DriftDebtRow(debt: d))
-              .toList();
-
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -138,8 +134,28 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
                     emoji: '🟣',
                     label: 'Drift Debt',
                     accentColor: const Color(0xFFA855F7),
-                    itemCount: report.debts.drift.length,
-                    children: driftItems,
+                    itemCount: snapshot.data!.debts.drift.length,
+                    children: snapshot.data!.debts.drift
+                        .map((DriftDebt d) => DriftDebtRow(debt: d))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: Text(
+                      'Powered by Coral · github + linear + slack + notion',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                          ) ??
+                          TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                          ),
+                    ),
                   ),
                   const SizedBox(height: 32),
                 ],
