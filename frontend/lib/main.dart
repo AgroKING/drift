@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'models/drift_report.dart';
 import 'services/report_loader.dart';
 import 'theme/app_theme.dart';
+import 'widgets/debt_category_card.dart';
 import 'widgets/score_header.dart';
 import 'widgets/top_action_banner.dart';
 
@@ -61,6 +62,26 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
             return const Center(child: Text('No report data.'));
           }
 
+          final List<Widget> reviewItems = report.debts.review
+              .map((ReviewDebt d) => ReviewDebtRow(debt: d))
+              .toList();
+
+          final List<Widget> replyItems = report.debts.reply
+              .map((ReplyDebt d) => ReplyDebtRow(debt: d))
+              .toList();
+
+          final List<Widget> commitmentItems = report.debts.commitment
+              .map((CommitmentDebt d) => CommitmentDebtRow(debt: d))
+              .toList();
+
+          final List<Widget> stalenessItems = report.debts.staleness
+              .map((StalenessDebt d) => StalenessDebtRow(debt: d))
+              .toList();
+
+          final List<Widget> driftItems = report.debts.drift
+              .map((DriftDebt d) => DriftDebtRow(debt: d))
+              .toList();
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -79,6 +100,46 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
                       const SizedBox(height: 24),
                       TopActionBanner(topAction: snapshot.data!.topAction),
                     ],
+                  ),
+                  const SizedBox(height: 32),
+                  DebtCategoryCard(
+                    emoji: '🔴',
+                    label: 'Review Debt',
+                    accentColor: const Color(0xFFEF4444),
+                    itemCount: report.debts.review.length,
+                    children: reviewItems,
+                  ),
+                  const SizedBox(height: 16),
+                  DebtCategoryCard(
+                    emoji: '🟠',
+                    label: 'Reply Debt',
+                    accentColor: const Color(0xFFF97316),
+                    itemCount: report.debts.reply.length,
+                    children: replyItems,
+                  ),
+                  const SizedBox(height: 16),
+                  DebtCategoryCard(
+                    emoji: '🟡',
+                    label: 'Commitment Debt',
+                    accentColor: const Color(0xFFEAB308),
+                    itemCount: report.debts.commitment.length,
+                    children: commitmentItems,
+                  ),
+                  const SizedBox(height: 16),
+                  DebtCategoryCard(
+                    emoji: '🔵',
+                    label: 'Staleness Debt',
+                    accentColor: const Color(0xFF3B82F6),
+                    itemCount: report.debts.staleness.length,
+                    children: stalenessItems,
+                  ),
+                  const SizedBox(height: 16),
+                  DebtCategoryCard(
+                    emoji: '🟣',
+                    label: 'Drift Debt',
+                    accentColor: const Color(0xFFA855F7),
+                    itemCount: report.debts.drift.length,
+                    children: driftItems,
                   ),
                   const SizedBox(height: 32),
                 ],
