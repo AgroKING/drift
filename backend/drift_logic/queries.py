@@ -1,12 +1,11 @@
-# Drift Debt Queries
+"""SQL query constants owned by Person 2.
 
-These are the Person 2 query templates for the five debt categories. They use
-`:user` as the current-user parameter. Person 1 can update table or field names
-after Coral schema discovery without changing the debt scoring code.
+These queries are intentionally written as Coral-facing templates. Person 1 can
+replace table/field names after schema discovery without changing the scoring
+or report-building code.
+"""
 
-## Review Debt
-
-```sql
+REVIEW_DEBT_QUERY = """
 SELECT
   pr.number AS pr_number,
   pr.title AS title,
@@ -22,11 +21,9 @@ LEFT JOIN linear_blocked_issues linear ON linear.blocking_pr_url = pr.url
 WHERE pr.state = 'open'
   AND pr.review_requested_from = :user
 ORDER BY days_waiting DESC, slack_mentions DESC;
-```
+"""
 
-## Reply Debt
-
-```sql
+REPLY_DEBT_QUERY = """
 SELECT
   message.source AS source,
   message.channel AS channel,
@@ -37,11 +34,9 @@ FROM unanswered_messages message
 WHERE message.assignee = :user
   AND message.needs_response = TRUE
 ORDER BY days_ago DESC;
-```
+"""
 
-## Commitment Debt
-
-```sql
+COMMITMENT_DEBT_QUERY = """
 SELECT
   issue.key AS task_id,
   issue.title AS title,
@@ -53,11 +48,9 @@ LEFT JOIN github_issue_activity github ON github.issue_key = issue.key
 WHERE issue.assignee = :user
   AND issue.status IN ('In Progress', 'Todo', 'Blocked')
 ORDER BY days_stale DESC;
-```
+"""
 
-## Staleness Debt
-
-```sql
+STALENESS_DEBT_QUERY = """
 SELECT
   pr.number AS pr_number,
   pr.title AS title,
@@ -69,11 +62,9 @@ FROM github_pull_requests pr
 WHERE pr.author = :user
   AND pr.state = 'open'
 ORDER BY days_stale DESC;
-```
+"""
 
-## Drift Debt
-
-```sql
+DRIFT_DEBT_QUERY = """
 SELECT
   issue.key AS task_id,
   issue.title AS task_title,
@@ -86,4 +77,12 @@ JOIN github_pull_requests pr ON pr.linked_issue_key = issue.key
 WHERE issue.assignee = :user
   AND issue.status IN ('Done', 'Completed', 'Closed')
   AND pr.state != 'merged';
-```
+"""
+
+ALL_QUERIES = {
+    "review": REVIEW_DEBT_QUERY,
+    "reply": REPLY_DEBT_QUERY,
+    "commitment": COMMITMENT_DEBT_QUERY,
+    "staleness": STALENESS_DEBT_QUERY,
+    "drift": DRIFT_DEBT_QUERY,
+}
