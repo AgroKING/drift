@@ -4,6 +4,7 @@ import 'models/drift_report.dart';
 import 'services/report_loader.dart';
 import 'theme/app_theme.dart';
 import 'widgets/score_header.dart';
+import 'widgets/top_action_banner.dart';
 
 void main() {
   // Start the Flutter app by inflating the root widget.
@@ -75,9 +76,11 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
                         scoreDelta: report.scoreDelta,
                         generatedAt: report.generatedAt,
                       ),
+                      const SizedBox(height: 24),
+                      TopActionBanner(topAction: snapshot.data!.topAction),
                     ],
                   ),
-                  const SizedBox(height: 800),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
