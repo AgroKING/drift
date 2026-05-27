@@ -34,18 +34,33 @@ class DriftHomeScreen extends StatefulWidget {
 }
 
 class _DriftHomeScreenState extends State<DriftHomeScreen> {
-  // Service used to obtain report data for the home screen.
-  final ReportLoader _reportLoader = ReportLoader();
-  // Kick off loading the demo report once when the state is created.
-  late final Future<DriftReport> _reportFuture = _reportLoader.loadMockReport();
+  bool _isLiveDemo = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Drift', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 32)),
+        actions: <Widget>[
+          _ModeBadge(isLive: _isLiveDemo),
+          const SizedBox(width: 10),
+          Switch.adaptive(
+            value: _isLiveDemo,
+            onChanged: (bool value) {
+              setState(() {
+                _isLiveDemo = value;
+              });
+            },
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
       // Builds UI that reacts to the asynchronous report loading.
       body: FutureBuilder<DriftReport>(
         // The future the builder listens to for report data.
-        future: _reportFuture,
+        future: _isLiveDemo
+            ? ReportLoader().fetchLiveReport()
+            : ReportLoader().loadMockReport(),
         builder: (BuildContext context, AsyncSnapshot<DriftReport> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -163,6 +178,87 @@ class _DriftHomeScreenState extends State<DriftHomeScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _ModeBadge extends StatefulWidget {
+  const _ModeBadge({required this.isLive});
+
+  final bool isLive;
+
+  @override
+  State<_ModeBadge> createState() => _ModeBadgeState();
+}
+
+class _ModeBadgeState extends State<_ModeBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+
+    if (widget.isLive) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _ModeBadge oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.isLive && !_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.isLive && _controller.isAnimating) {
+      _controller.stop();
+      _controller.value = 1.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isLive = widget.isLive;
+    final Color baseColor = isLive
+        ? const Color(0xFF22C55E) // green
+        : const Color(0xFF64748B); // slate
+    final Color bgColor = baseColor.withValues(alpha: 0.18);
+
+    final String text = isLive ? '📡 LIVE MODE' : '📁 MOCK DATA';
+
+    return FadeTransition(
+      opacity: isLive
+          ? Tween<double>(begin: 0.55, end: 1.0).animate(
+              CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+            )
+          : const AlwaysStoppedAnimation<double>(1.0),
+      child: Container(
+        margin: const EdgeInsets.only(right: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: baseColor.withValues(alpha: 0.55)),
+        ),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: baseColor,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.6,
+              ),
+        ),
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:frontend/models/drift_report.dart';
+import 'package:http/http.dart' as http;
 
 // Small utility used by the app to obtain a `DriftReport` instance.
 
@@ -17,8 +19,20 @@ class ReportLoader {
     return DriftReport.fromJson(jsonMap);
   }
 
-  // In a real app, this would make a network request to fetch the latest report data.
+  // Fetches the report from the backend server for the live demo.
   Future<DriftReport> fetchLiveReport() async {
-    throw UnimplementedError('Live report fetching will be implemented for the demo.');
+    final Uri url = Uri.parse('http://localhost:8080/drift_report.json');
+    final http.Response response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch live report (${response.statusCode}).');
+    }
+
+    final dynamic decoded = json.decode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw Exception('Live report JSON was not an object.');
+    }
+
+    return DriftReport.fromJson(decoded);
   }
 }
