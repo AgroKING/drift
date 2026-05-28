@@ -1,0 +1,13 @@
+{"channel": "C0B616280CF", "text": "hey can someone review PR #3? been open since Monday", "user": "ZansSux", "ts": "1716800000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "PR #3 is still sitting unreviewed, anyone free?", "user": "ZansSux", "ts": "1716850000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "I'll take a look tonight after standup", "user": "teammate1", "ts": "1716851000.000001", "thread_ts": "1716850000.000001"}
+{"channel": "C0B616280CF", "text": "blocked on the auth module, waiting for design feedback from the team", "user": "ZansSux", "ts": "1716860000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "ENG-02 dashboard crash still happening in prod, anyone looked at it?", "user": "ZansSux", "ts": "1716870000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "yeah I saw it, think it's a null check issue on the chart component", "user": "teammate1", "ts": "1716871000.000001", "thread_ts": "1716870000.000001"}
+{"channel": "C0B616280CF", "text": "can someone approve the deploy? I pushed a fix for ENG-02 this morning", "user": "ZansSux", "ts": "1716890000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "drift score algo PR is up — ENG-06, needs review before we merge", "user": "ZansSux", "ts": "1716900000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "heads up: CI is failing on main, don't merge anything yet", "user": "teammate2", "ts": "1716910000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "fixed the CI issue, should be green now", "user": "ZansSux", "ts": "1716920000.000001", "thread_ts": "1716910000.000001"}
+{"channel": "C0B616280CF", "text": "ENG-04 tests are written, created a PR for review", "user": "ZansSux", "ts": "1716930000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "anyone written docs yet? ENG-03 is still in Todo", "user": "teammate2", "ts": "1716940000.000001", "thread_ts": null}
+{"channel": "C0B616280CF", "text": "not yet, will get to it after the scoring module is done", "user": "ZansSux", "ts": "1716941000.000001", "thread_ts": "1716940000.000001"}

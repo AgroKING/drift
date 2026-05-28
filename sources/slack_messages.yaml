@@ -1,0 +1,22 @@
+name: slack_messages
+version: "0.1.0"
+dsl_version: 3
+backend: jsonl
+tables:
+  - name: messages
+    description: Mock Slack messages for Drift demo
+    source:
+      location: "file:////Users/milankc/proj/data/"
+      glob: "slack_messages.jsonl"
+    columns:
+      - name: channel
+        type: Utf8
+      - name: text
+        type: Utf8
+      - name: user
+        type: Utf8
+      - name: ts
+        type: Utf8
+      - name: thread_ts
+        type: Utf8
+        nullable: true

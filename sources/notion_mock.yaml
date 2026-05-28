@@ -1,0 +1,32 @@
+name: notion_mock
+version: "0.1.0"
+dsl_version: 3
+backend: jsonl
+tables:
+  - name: pages
+    description: Mock Notion pages for Drift demo
+    source:
+      location: "file:////Users/milankc/proj/data/"
+      glob: "notion_pages.jsonl"
+    columns:
+      - name: id
+        type: Utf8
+      - name: page_id
+        type: Utf8
+      - name: object
+        type: Utf8
+      - name: created_time
+        type: Utf8
+      - name: last_edited_time
+        type: Utf8
+      - name: url
+        type: Utf8
+      - name: public_url
+        type: Utf8
+        nullable: true
+      - name: in_trash
+        type: Boolean
+      - name: properties
+        type: Utf8
+      - name: parent
+        type: Utf8

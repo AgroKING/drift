@@ -1,0 +1,8 @@
+.env
+.DS_Store
+__pycache__/
+*.pyc
+.dart_tool/
+build/
+backend/data/drift_report.json
+backend/data/score_history.jsonl
