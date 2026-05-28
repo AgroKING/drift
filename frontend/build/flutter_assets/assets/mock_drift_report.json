@@ -1,0 +1,94 @@
+{
+  "generated_at": "2026-05-25T10:15:00Z",
+  "user": "agp",
+  "score": 47,
+  "score_delta": 12,
+  "top_action": {
+    "text": "Review PR #482 — @amit has been waiting 6 days and it's blocking the sprint.",
+    "type": "review",
+    "url": "https://github.com/acme/backend/pull/482"
+  },
+  "debts": {
+    "review": [
+      {
+        "pr_number": 482,
+        "title": "Add rate limiting to auth service",
+        "author": "amit",
+        "repo": "acme/backend",
+        "days_waiting": 6,
+        "slack_mentions": 3,
+        "blocks": "LIN-891",
+        "url": "https://github.com/acme/backend/pull/482"
+      },
+      {
+        "pr_number": 501,
+        "title": "Fix pagination in search results",
+        "author": "priya",
+        "repo": "acme/frontend",
+        "days_waiting": 2,
+        "slack_mentions": 0,
+        "blocks": null,
+        "url": "https://github.com/acme/frontend/pull/501"
+      }
+    ],
+    "reply": [
+      {
+        "source": "slack",
+        "channel": "#design-review",
+        "from": "sarah",
+        "days_ago": 3,
+        "preview": "Can you approve the API schema change? We need sign-off before Thursday."
+      },
+      {
+        "source": "slack",
+        "channel": "#backend",
+        "from": "amit",
+        "days_ago": 1,
+        "preview": "Any update on the auth migration timeline? PM is asking."
+      },
+      {
+        "source": "notion",
+        "channel": "Q3 Roadmap",
+        "from": "boss",
+        "days_ago": 2,
+        "preview": "Can you own the billing section? Adding you as the DRI."
+      }
+    ],
+    "commitment": [
+      {
+        "task_id": "LIN-342",
+        "title": "Migrate auth to OAuth2",
+        "status": "In Progress",
+        "days_stale": 12,
+        "last_commit_date": "2026-05-13T14:22:00Z"
+      },
+      {
+        "task_id": "LIN-410",
+        "title": "Write integration tests for payment flow",
+        "status": "In Progress",
+        "days_stale": 5,
+        "last_commit_date": "2026-05-20T09:10:00Z"
+      }
+    ],
+    "staleness": [
+      {
+        "pr_number": 461,
+        "title": "Fix CORS headers for mobile clients",
+        "repo": "acme/backend",
+        "days_stale": 8,
+        "reviews": 0,
+        "url": "https://github.com/acme/backend/pull/461"
+      }
+    ],
+    "drift": [
+      {
+        "task_id": "LIN-278",
+        "task_title": "Implement webhook retry logic",
+        "task_status": "Done",
+        "pr_number": 445,
+        "pr_status": "open",
+        "contradiction": "Task marked Done in Linear but PR #445 is still open and unmerged in GitHub"
+      }
+    ]
+  }
+}

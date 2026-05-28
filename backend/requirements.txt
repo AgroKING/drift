@@ -1,1 +1,1 @@
-# add requirements here
+pydantic>=2

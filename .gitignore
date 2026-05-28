@@ -1,8 +1,40 @@
-.env
-.DS_Store
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
 __pycache__/
-*.pyc
-.dart_tool/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
-backend/data/drift_report.json
-backend/data/score_history.jsonl
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.pytest-tmp/
+.coverage
+htmlcov/
+
+# uv
+uv.lock
