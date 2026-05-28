@@ -6,9 +6,9 @@ import 'theme/app_theme.dart';
 import 'widgets/debt_category_card.dart';
 import 'widgets/score_header.dart';
 import 'widgets/top_action_banner.dart';
+import 'package:frontend/views/demo_view.dart';
 
 void main() {
-  // Start the Flutter app by inflating the root widget.
   runApp(const DriftApp());
 }
 
@@ -20,8 +20,8 @@ class DriftApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Drift',
-      theme: AppTheme.dark,
-      home: const DriftHomeScreen(),
+      theme: AppTheme.light,
+      home: const DemoView(),
     );
   }
 }
