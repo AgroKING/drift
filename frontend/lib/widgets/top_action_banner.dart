@@ -12,10 +12,10 @@ class TopActionBanner extends StatelessWidget {
     required this.topAction,
   });
 
-  static const Color _surface = Color(0xFF1A1D27);
-  static const Color _border = Color.fromRGBO(255, 255, 255, 0.06);
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _surface = Color(0xFFFFFFFF);
+  static const Color _border = Color(0xFFE2E8F0);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   Color _accentForType(String type) {
     // Accent color that matches the action type/category.
@@ -85,7 +85,7 @@ class TopActionBanner extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: <Color>[
             // Soft accent glow fading outwards.
-            accent.withValues(alpha: 0.16),
+            accent.withValues(alpha: 0.14),
             accent.withValues(alpha: 0.0),
           ],
         ),
@@ -111,6 +111,13 @@ class TopActionBanner extends StatelessWidget {
           color: _surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: _border),
+          boxShadow: const <BoxShadow>[
+            BoxShadow(
+              color: Color(0x120F172A),
+              blurRadius: 18,
+              offset: Offset(0, 8),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
