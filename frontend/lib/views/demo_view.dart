@@ -11,99 +11,6 @@ class DemoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navy = Theme.of(context).colorScheme.onSurface;
-    final slate = Theme.of(context).colorScheme.onSurfaceVariant;
-
-    Widget tierLabel(String label) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Text(
-          label.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-            color: slate,
-          ),
-        ),
-      );
-    }
-
-    Widget arrowRow({required int count}) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          count,
-          (index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: const Icon(Icons.arrow_upward, size: 20, color: Colors.grey),
-          ),
-        ),
-      );
-    }
-
-    Widget toolCard({required String asset, required String name}) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(asset, height: 28),
-            const SizedBox(height: 12),
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: navy,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget metricCard(String title) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: navy,
-            ),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: CustomNavBar(
         actions: [
@@ -181,138 +88,28 @@ class DemoView extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: SizedBox(
-                            width: 860,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                tierLabel('Interfaces & Agents'),
-                                Container(
-                                  padding: const EdgeInsets.all(24),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.08,
-                                        ),
-                                        blurRadius: 18,
-                                        offset: const Offset(0, 8),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'Drift Dashboard',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: navy,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        'Calculates & Resolves Attention Debt',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: slate,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 245, 245, 245),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.withValues(alpha: 0.6),
+                                blurRadius: 24,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(maxWidth: 800),
+                                child: Image.asset(
+                                  'assets/architecture_diagram.png',
+                                  fit: BoxFit.contain,
                                 ),
-                                const SizedBox(height: 28),
-                                arrowRow(count: 3),
-                                const SizedBox(height: 28),
-                                tierLabel('Enterprise Context Layer'),
-                                Container(
-                                  padding: const EdgeInsets.all(24),
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFF3B82F6,
-                                    ).withValues(alpha: 0.06),
-                                    borderRadius: BorderRadius.circular(18),
-                                    border: Border.all(
-                                      color: const Color(
-                                        0xFF3B82F6,
-                                      ).withValues(alpha: 0.25),
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'Coral Context Engine',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: navy,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: metricCard('Event Graph'),
-                                          ),
-                                          const SizedBox(width: 14),
-                                          Expanded(
-                                            child: metricCard('Metadata'),
-                                          ),
-                                          const SizedBox(width: 14),
-                                          Expanded(
-                                            child: metricCard('Lineage'),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 28),
-                                arrowRow(count: 4),
-                                const SizedBox(height: 28),
-                                tierLabel('Business Systems'),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: toolCard(
-                                        asset: 'assets/github_logo.png',
-                                        name: 'GitHub',
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: toolCard(
-                                        asset: 'assets/slack_logo.png',
-                                        name: 'Slack',
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: toolCard(
-                                        asset: 'assets/linear_logo.png',
-                                        name: 'Linear',
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: toolCard(
-                                        asset: 'assets/notion_logo.png',
-                                        name: 'Notion',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),

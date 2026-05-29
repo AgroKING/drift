@@ -32,7 +32,4 @@ flutter:
     - assets/mock_drift_report.json
     - assets/logo.png
     - assets/backgroundPattern.jpg
-    - assets/github_logo.png
-    - assets/slack_logo.png
-    - assets/linear_logo.png
-    - assets/notion_logo.png
+    - assets/architecture_diagram.png
