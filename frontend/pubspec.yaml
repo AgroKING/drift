@@ -31,3 +31,4 @@ flutter:
   assets:
     - assets/mock_drift_report.json
     - assets/logo.png
+    - assets/backgroundPattern.jpg
