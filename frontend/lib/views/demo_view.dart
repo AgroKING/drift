@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/home_view.dart';
-import 'package:frontend/widgets/background_pattern.dart';
-import 'package:frontend/widgets/faq_tile.dart';
+
+import 'package:Drift/views/home_view.dart';
+import 'package:Drift/widgets/background_pattern.dart';
+import 'package:Drift/widgets/faq_tile.dart';
+
 import '../widgets/custom_navbar.dart';
 
 class DemoView extends StatelessWidget {
@@ -75,7 +77,135 @@ class DemoView extends StatelessWidget {
                             child: const Text('Get Started'),
                           ),
                         ),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 80),
+                        Text(
+                          'How it works',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0F172A),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 40),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 40,
+                          runSpacing: 40,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Wrap(
+                                    spacing: 20,
+                                    runSpacing: 20,
+                                    children: [
+                                      Image.asset('assets/github_logo.png', height: 32),
+                                      Image.asset('assets/slack_logo.png', height: 32),
+                                      Image.asset('assets/linear_logo.png', height: 32),
+                                      Image.asset('assets/notion_logo.png', height: 32),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Raw Tool Events',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.arrow_forward_rounded, color: Colors.blue, size: 32),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Coral Engine',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Standardizes Context',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.arrow_forward_rounded, color: Colors.blue, size: 32),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.orange,
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Drift Dashboard',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Calculates Attention Debt',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 80),
                         Text(
                           'FAQs',
                           style: TextStyle(

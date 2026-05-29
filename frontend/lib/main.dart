@@ -6,7 +6,7 @@ import 'theme/app_theme.dart';
 import 'widgets/debt_category_card.dart';
 import 'widgets/score_header.dart';
 import 'widgets/top_action_banner.dart';
-import 'package:frontend/views/demo_view.dart';
+import 'package:Drift/views/demo_view.dart';
 
 void main() {
   runApp(const DriftApp());
