@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/home_view.dart';
+import 'package:frontend/views/demo_view.dart';
 
 class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
@@ -33,7 +33,7 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const HomeView(),
+                            builder: (context) => const DemoView(),
                           ),
                         );
                       },
@@ -56,7 +56,6 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
                           color: Colors.black87,
                         ),
                       ),
-                      // to not change the color of the text when the button is pressed or hovered, we set the color explicitly and avoid using the default TextButton styles.
                       // const Text('Drift'),
                     ),
                   ),
