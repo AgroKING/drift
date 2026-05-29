@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/views/home_view.dart';
+import '../widgets/custom_navbar.dart';
 
 class DemoView extends StatelessWidget {
   const DemoView({super.key});
@@ -6,8 +8,18 @@ class DemoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Demo View'),
+      appBar: CustomNavBar(
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeView()),
+              );
+            },
+            child: const Text('Get Started'),
+          ),
+        ],
       ),
       body: const Center(
         child: Text('Demo View Content'),
