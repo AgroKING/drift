@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:Drift/models/drift_report.dart';
+import 'package:drift/models/drift_report.dart';
 import 'package:http/http.dart' as http;
 
 // Small utility used by the app to obtain a `DriftReport` instance.

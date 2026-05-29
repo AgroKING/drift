@@ -1,4 +1,4 @@
-name: Drift
+name: drift
 description: "Drift is a personal agent that scans a developer's GitHub, Linear, Slack, and Notion to find things they've been neglecting — PRs they haven't reviewed, Slack mentions they never replied to, sprint tasks with no Git activity, and contradictions between tools (task marked \"Done\" but PR still open)."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

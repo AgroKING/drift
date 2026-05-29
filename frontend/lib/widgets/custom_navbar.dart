@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Drift/views/demo_view.dart';
+import 'package:drift/views/demo_view.dart';
 
 class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:Drift/views/home_view.dart';
-import 'package:Drift/widgets/background_pattern.dart';
-import 'package:Drift/widgets/faq_tile.dart';
+import 'package:drift/views/home_view.dart';
+import 'package:drift/widgets/background_pattern.dart';
+import 'package:drift/widgets/faq_tile.dart';
 
 import '../widgets/custom_navbar.dart';
 
@@ -11,6 +11,99 @@ class DemoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navy = Theme.of(context).colorScheme.onSurface;
+    final slate = Theme.of(context).colorScheme.onSurfaceVariant;
+
+    Widget tierLabel(String label) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Text(
+          label.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+            color: slate,
+          ),
+        ),
+      );
+    }
+
+    Widget arrowRow({required int count}) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          count,
+          (index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: const Icon(Icons.arrow_upward, size: 20, color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
+    Widget toolCard({required String asset, required String name}) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(asset, height: 28),
+            const SizedBox(height: 12),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: navy,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget metricCard(String title) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: navy,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: CustomNavBar(
         actions: [
@@ -88,122 +181,140 @@ class DemoView extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 40,
-                          runSpacing: 40,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Wrap(
-                                    spacing: 20,
-                                    runSpacing: 20,
-                                    children: [
-                                      Image.asset('assets/github_logo.png', height: 32),
-                                      Image.asset('assets/slack_logo.png', height: 32),
-                                      Image.asset('assets/linear_logo.png', height: 32),
-                                      Image.asset('assets/notion_logo.png', height: 32),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: SizedBox(
+                            width: 860,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                tierLabel('Interfaces & Agents'),
+                                Container(
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.08,
+                                        ),
+                                        blurRadius: 18,
+                                        offset: const Offset(0, 8),
+                                      ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Raw Tool Events',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[700],
-                                    ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Drift Dashboard',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: navy,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        'Calculates & Resolves Attention Debt',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: slate,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            Icon(Icons.arrow_forward_rounded, color: Colors.blue, size: 32),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Coral Engine',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Standardizes Context',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white.withValues(alpha: 0.8),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(Icons.arrow_forward_rounded, color: Colors.blue, size: 32),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 2,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Drift Dashboard',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[800],
+                                const SizedBox(height: 28),
+                                arrowRow(count: 3),
+                                const SizedBox(height: 28),
+                                tierLabel('Enterprise Context Layer'),
+                                Container(
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0xFF3B82F6,
+                                    ).withValues(alpha: 0.06),
+                                    borderRadius: BorderRadius.circular(18),
+                                    border: Border.all(
+                                      color: const Color(
+                                        0xFF3B82F6,
+                                      ).withValues(alpha: 0.25),
+                                      width: 1.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Calculates Attention Debt',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Coral Context Engine',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: navy,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: metricCard('Event Graph'),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          Expanded(
+                                            child: metricCard('Metadata'),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          Expanded(
+                                            child: metricCard('Lineage'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 28),
+                                arrowRow(count: 4),
+                                const SizedBox(height: 28),
+                                tierLabel('Business Systems'),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: toolCard(
+                                        asset: 'assets/github_logo.png',
+                                        name: 'GitHub',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: toolCard(
+                                        asset: 'assets/slack_logo.png',
+                                        name: 'Slack',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: toolCard(
+                                        asset: 'assets/linear_logo.png',
+                                        name: 'Linear',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: toolCard(
+                                        asset: 'assets/notion_logo.png',
+                                        name: 'Notion',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                         const SizedBox(height: 80),
                         Text(
