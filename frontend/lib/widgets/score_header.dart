@@ -151,20 +151,20 @@ class ScoreHeader extends StatelessWidget {
                     Text(
                       'Attention Debt Score',
                       style: GoogleFonts.inter(
-                        fontSize: 18,
+                        fontSize: 40,
                         fontWeight: FontWeight.w700,
                         color: _textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '(red if positive, green if negative delta)',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: _textSecondary,
-                      ),
-                    ),
+                    // const SizedBox(height: 6),
+                    // Text(
+                    //   '(red if positive, green if negative delta)',
+                    //   style: GoogleFonts.inter(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     color: _textSecondary,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
