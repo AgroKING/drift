@@ -90,5 +90,11 @@
         "contradiction": "Task marked Done in Linear but PR #445 is still open and unmerged in GitHub"
       }
     ]
-  }
+  },
+  "insight": "You are blocking 2 PR reviews from amit and priya, while your task LIN-342 has been stale for 12 days. Focus on reviewing auth changes first.",
+  "suggested_plan": [
+    "Review PR #482 to unblock @amit (waiting 6 days)",
+    "Reply to sarah on Slack #design-review (3 days ago)",
+    "Update task LIN-342 (stale 12 days)"
+  ]
 }

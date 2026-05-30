@@ -1,7 +1,4 @@
-"""Public API for the drift_logic package.
-
-    from drift_logic import build_drift_report, DriftReport
-"""
+"""Public API for the drift_logic package."""
 
 from .models import DebtBuckets, DriftReport, TopAction
 from .report import build_debt_buckets, build_drift_report

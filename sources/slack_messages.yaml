@@ -6,7 +6,7 @@ tables:
   - name: messages
     description: Mock Slack messages for Drift demo
     source:
-      location: "file:////Users/milankc/proj/data/"
+      location: "file:///home/agp/PycharmProjects/drift/data/"
       glob: "slack_messages.jsonl"
     columns:
       - name: channel

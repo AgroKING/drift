@@ -1,89 +1,78 @@
-# Drift Debt Queries
+# Drift Database Queries and Pipeline
 
-These are the Person 2 query templates for the five debt categories. They use
-`:user` as the current-user parameter. Person 1 can update table or field names
-after Coral schema discovery without changing the debt scoring code.
+This document explains how Drift fetches data from developer tools (GitHub, Linear, and Slack) using the Coral MCP SQL interface, and how those queries are integrated into our reporting pipeline.
 
-## Review Debt
+## The Query Pipeline
 
-```sql
-SELECT
-  pr.number AS pr_number,
-  pr.title AS title,
-  pr.author AS author,
-  pr.repository AS repo,
-  DATE_DIFF('day', pr.review_requested_at, CURRENT_TIMESTAMP) AS days_waiting,
-  COALESCE(slack.mention_count, 0) AS slack_mentions,
-  linear.issue_key AS blocks,
-  pr.url AS url
-FROM github_pull_requests pr
-LEFT JOIN slack_pr_mentions slack ON slack.pr_url = pr.url
-LEFT JOIN linear_blocked_issues linear ON linear.blocking_pr_url = pr.url
-WHERE pr.state = 'open'
-  AND pr.review_requested_from = :user
-ORDER BY days_waiting DESC, slack_mentions DESC;
-```
+Rather than executing complex multi-source SQL joins on the query engine (which can fail due to planner limitations like unsupported scalar subqueries or date casts), Drift uses a direct query-and-process architecture:
 
-## Reply Debt
+1. **Direct Queries:** We fetch raw flat tables for open pull requests, assigned issues, and messages.
+2. **Python Joins & Processing:** The logic layer joins, counts, and filters the rows entirely in Python. This ensures database dialect compatibility and keeps exactly a single LLM invocation per scan.
+
+All queries are executed dynamically inside [agent_loop.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/agent_loop.py).
+
+---
+
+## 1. GitHub Pull Requests
+
+We query open and recently updated pull requests in the repository:
 
 ```sql
-SELECT
-  message.source AS source,
-  message.channel AS channel,
-  message.sender AS "from",
-  DATE_DIFF('day', message.created_at, CURRENT_TIMESTAMP) AS days_ago,
-  message.preview AS preview
-FROM unanswered_messages message
-WHERE message.assignee = :user
-  AND message.needs_response = TRUE
-ORDER BY days_ago DESC;
+SELECT 
+  number, 
+  title, 
+  user__login, 
+  state, 
+  html_url, 
+  requested_reviewer_logins, 
+  created_at, 
+  updated_at, 
+  review_comments, 
+  body 
+FROM github.pulls 
+WHERE owner = '{owner}' 
+  AND repo = '{repo}';
 ```
 
-## Commitment Debt
+- **Review Debt:** Filtered in Python where `state == 'open'` and the developer's username is in `requested_reviewer_logins`.
+- **Staleness Debt:** Filtered in Python where `state == 'open'` and `user__login == '{github_username}'`.
+
+---
+
+## 2. Linear Issues
+
+We fetch all issues assigned to the developer that are currently active or recently closed:
 
 ```sql
-SELECT
-  issue.key AS task_id,
-  issue.title AS title,
-  issue.status AS status,
-  DATE_DIFF('day', issue.updated_at, CURRENT_TIMESTAMP) AS days_stale,
-  github.last_commit_date AS last_commit_date
-FROM linear_issues issue
-LEFT JOIN github_issue_activity github ON github.issue_key = issue.key
-WHERE issue.assignee = :user
-  AND issue.status IN ('In Progress', 'Todo', 'Blocked')
-ORDER BY days_stale DESC;
+SELECT 
+  identifier, 
+  title, 
+  state_name, 
+  assignee_name, 
+  updated_at, 
+  description 
+FROM linear_mock.issues 
+WHERE assignee_name = '{github_username}';
 ```
 
-## Staleness Debt
+- **Commitment Debt:** Active tasks where `state_name` is in `('In Progress', 'Todo', 'Blocked')`.
+- **Drift Debt:** Discrepancies where an issue status is closed (e.g. `Done`, `Completed`) but the linked pull request in GitHub is still open.
+
+---
+
+## 3. Slack Messages
+
+We query Slack messages to detect threads or channel discussions that mention open PRs or need replies:
 
 ```sql
-SELECT
-  pr.number AS pr_number,
-  pr.title AS title,
-  pr.repository AS repo,
-  DATE_DIFF('day', pr.updated_at, CURRENT_TIMESTAMP) AS days_stale,
-  COALESCE(pr.review_count, 0) AS reviews,
-  pr.url AS url
-FROM github_pull_requests pr
-WHERE pr.author = :user
-  AND pr.state = 'open'
-ORDER BY days_stale DESC;
+SELECT 
+  channel, 
+  text, 
+  user, 
+  ts, 
+  thread_ts 
+FROM slack_messages.messages;
 ```
 
-## Drift Debt
-
-```sql
-SELECT
-  issue.key AS task_id,
-  issue.title AS task_title,
-  issue.status AS task_status,
-  pr.number AS pr_number,
-  pr.state AS pr_status,
-  CONCAT('Task marked ', issue.status, ' in Linear but PR #', pr.number, ' is ', pr.state) AS contradiction
-FROM linear_issues issue
-JOIN github_pull_requests pr ON pr.linked_issue_key = issue.key
-WHERE issue.assignee = :user
-  AND issue.status IN ('Done', 'Completed', 'Closed')
-  AND pr.state != 'merged';
-```
+- **Slack Mentions:** Checked by matching PR numbers or HTML URLs inside message texts.
+- **Reply Debt:** Filtered in Python to find messages that don't have thread replies from the developer.
