@@ -8,6 +8,11 @@ from pydantic import ValidationError
 from drift_logic.models import DriftReport
 
 logger = logging.getLogger(__name__)
+REPO_ROOT = Path(__file__).resolve().parents[2]
+FRONTEND_REPORT_PATHS = [
+    REPO_ROOT / "frontend" / "web" / "drift_report.json",
+    REPO_ROOT / "frontend" / "build" / "web" / "drift_report.json",
+]
 
 
 def extract_json_object(raw_json_str: str) -> str:
@@ -89,6 +94,13 @@ def validate_and_write_report(
         path = Path(output_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(out_json, encoding="utf-8")
+
+        for mirror_path in FRONTEND_REPORT_PATHS:
+            try:
+                mirror_path.parent.mkdir(parents=True, exist_ok=True)
+                mirror_path.write_text(out_json, encoding="utf-8")
+            except OSError as mirror_error:
+                logger.warning("Failed to mirror report to %s: %s", mirror_path, mirror_error)
 
         print(f"Drift report successfully written to {output_path}")
         return True
