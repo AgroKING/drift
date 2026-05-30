@@ -1,16 +1,4 @@
-"""Debt scoring and top-action selection.
-
-All scoring is deterministic — no network calls, no randomness. The weights
-are tuned to produce scores that feel proportional to urgency:
-
-- review:     max 30 per item  (days_waiting * 3 + slack_mentions * 2 + 8 if blocker)
-- reply:      max 20 per item  (days_ago * 2)
-- commitment: max 20 per item  (days_stale * 2)
-- staleness:  max 15 per item  (days_stale * 2 + 5 if zero reviews)
-- drift:      12–15 per item   (15 if task closed but PR not merged, else 12)
-
-Total is clamped to [0, 100].
-"""
+"""Deterministic debt scoring weights and top-action selection logic."""
 
 from __future__ import annotations
 
@@ -31,9 +19,7 @@ def clamp(value: int, low: int = 0, high: int = MAX_SCORE) -> int:
     return max(low, min(high, value))
 
 
-
 # Per-item scorers
-
 
 
 def score_review(item: ReviewDebt) -> int:
@@ -60,14 +46,15 @@ def score_staleness(item: StalenessDebt) -> int:
 
 def score_drift(item: DriftDebt) -> int:
     closed_statuses = {"done", "completed", "closed"}
-    if item.task_status.lower() in closed_statuses and item.pr_status.lower() != "merged":
+    if (
+        item.task_status.lower() in closed_statuses
+        and item.pr_status.lower() != "merged"
+    ):
         return 15
     return 12
 
 
-# ---------------------------------------------------------------------------
 # Aggregate scorer
-# ---------------------------------------------------------------------------
 
 
 def calculate_score(debts: DebtBuckets) -> int:
@@ -80,15 +67,7 @@ def calculate_score(debts: DebtBuckets) -> int:
     return clamp(total)
 
 
-# ---------------------------------------------------------------------------
-# Top-action selector (priority order)
-#
-# 1. Blocking review debt (review items with a `blocks` field)
-# 2. Drift contradictions
-# 3. Very stale commitments
-# 4. Unanswered replies
-# 5. Stale PRs
-# ---------------------------------------------------------------------------
+# Top-action selector prioritised by: 1. Blocker review, 2. Drift, 3. Stale commitment, 4. Reply, 5. Stale PR.
 
 
 def choose_top_action(debts: DebtBuckets) -> TopAction:
@@ -127,7 +106,9 @@ def choose_top_action(debts: DebtBuckets) -> TopAction:
     for item in debts.staleness:
         priority = score_staleness(item)
         text = f"Move PR #{item.pr_number}: {item.title} has been stale for {item.days_stale} days."
-        candidates.append((priority, TopAction(text=text, type="staleness", url=item.url)))
+        candidates.append(
+            (priority, TopAction(text=text, type="staleness", url=item.url))
+        )
 
     if not candidates:
         return TopAction.none()
