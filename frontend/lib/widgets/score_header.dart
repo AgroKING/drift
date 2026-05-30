@@ -17,13 +17,13 @@ class ScoreHeader extends StatelessWidget {
     required this.generatedAt,
   });
 
-  static const Color _surface = Color(0xFF1A1D27);
-  static const Color _border = Color.fromRGBO(255, 255, 255, 0.06);
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _surface = Color(0xFFFFFFFF);
+  static const Color _border = Color(0xFFE2E8F0);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   static const Color _deltaUpBad = Color(0xFFEF4444); // debt increased
-  static const Color _deltaDownGood = Color(0xFF22C55E); // debt decreased
+  static const Color _deltaDownGood = Color(0xFF16A34A); // debt decreased
 
   static const List<String> _months = <String>[
     'Jan',
@@ -65,15 +65,25 @@ class ScoreHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          '🌊 DRIFT',
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.4,
-            color: _textPrimary,
-          ),
-        ),
+        // Row(
+        //   children: [
+        //     Image.asset(
+        //       'assets/logo.png',
+        //       width: 32,
+        //       height: 32,
+        //      ),
+        //      SizedBox(width: 8),
+        //     Text(
+        //       'DRIFT',
+        //       style: GoogleFonts.inter(
+        //         fontSize: 18,
+        //         fontWeight: FontWeight.w700,
+        //         letterSpacing: 1.4,
+        //         color: _textPrimary,
+        //       ),
+        //     ),
+        //   ],
+        // ),
         const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,6 +94,13 @@ class ScoreHeader extends StatelessWidget {
                 color: _surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: _border),
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Color(0x120F172A),
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -134,20 +151,20 @@ class ScoreHeader extends StatelessWidget {
                     Text(
                       'Attention Debt Score',
                       style: GoogleFonts.inter(
-                        fontSize: 18,
+                        fontSize: 40,
                         fontWeight: FontWeight.w700,
                         color: _textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '(red if positive, green if negative delta)',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: _textSecondary,
-                      ),
-                    ),
+                    // const SizedBox(height: 6),
+                    // Text(
+                    //   '(red if positive, green if negative delta)',
+                    //   style: GoogleFonts.inter(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     color: _textSecondary,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

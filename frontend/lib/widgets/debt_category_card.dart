@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../models/drift_report.dart';
 
@@ -21,10 +20,10 @@ class DebtCategoryCard extends StatelessWidget {
     required this.children,
   });
 
-  static const Color _surface = Color(0xFF1A1D27);
-  static const Color _border = Color.fromRGBO(255, 255, 255, 0.06);
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _surface = Color(0xFFFFFFFF);
+  static const Color _border = Color(0xFFE2E8F0);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
@@ -35,26 +34,25 @@ class DebtCategoryCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: _border),
+        color: _surface,
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x120F172A),
+            blurRadius: 22,
+            offset: Offset(0, 10),
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Stack(
           children: <Widget>[
-            // Frosted-glass look with blur and a semi-transparent background color.
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-              child: Container(
-                color: _surface.withValues(alpha: 0.92),
-              ),
-            ),
-            // Accent indicator strip.
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                // Thin vertical strip used as a visual accent for the category.
                 width: 4,
                 decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.85),
+                  color: accentColor.withValues(alpha: 0.9),
                 ),
               ),
             ),
@@ -120,7 +118,7 @@ class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.accentColor});
 
   static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +126,9 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: Colors.white.withValues(alpha: 0.02),
+        color: Colors.white,
         border: Border.all(
-          color: accentColor.withValues(alpha: 0.18),
+          color: accentColor.withValues(alpha: 0.16),
         ),
       ),
       child: Row(
@@ -172,7 +170,7 @@ class _ItemsContainer extends StatelessWidget {
     required this.children,
   });
 
-  static const Color _border = Color.fromRGBO(255, 255, 255, 0.06);
+  static const Color _border = Color(0xFFE2E8F0);
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +178,7 @@ class _ItemsContainer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: _border),
-        color: Colors.white.withValues(alpha: 0.02),
+        color: Colors.white,
       ),
       child: Column(
         children: <Widget>[
@@ -200,46 +198,52 @@ class _ItemsContainer extends StatelessWidget {
 
 class ReviewDebtRow extends StatelessWidget {
   final ReviewDebt debt;
+  final VoidCallback? onOpen;
 
   const ReviewDebtRow({
     super.key,
     required this.debt,
+    this.onOpen,
   });
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
     // Optional block count displayed after the main metadata (if present).
     final String blocks = debt.blocks == null ? '' : ' · ⛓ ${debt.blocks}';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'PR #${debt.prNumber} · "${debt.title}" · @${debt.author}',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: _textPrimary,
+    return GestureDetector(
+      onTap: onOpen,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'PR #${debt.prNumber} · "${debt.title}" · @${debt.author}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          '${debt.repo} · ⏱ ${debt.daysWaiting} days · 💬 ${debt.slackMentions} Slack asks$blocks',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w600,
-            color: _textSecondary,
+          const SizedBox(height: 6),
+          Text(
+            '${debt.repo} · ⏱ ${debt.daysWaiting} days · 💬 ${debt.slackMentions} Slack asks$blocks',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              height: 1.25,
+              fontWeight: FontWeight.w600,
+              color: _textSecondary,
+            ),
           ),
-        ),
-      ],
+        ],
+        )
     );
   }
 }
@@ -252,8 +256,8 @@ class ReplyDebtRow extends StatelessWidget {
     required this.debt,
   });
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   String _sourceLabel(String source) {
     switch (source.toLowerCase()) {
@@ -299,32 +303,35 @@ class ReplyDebtRow extends StatelessWidget {
         ? '#${debt.channel.replaceAll('#', '')}'
         : debt.channel;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          '$icon $label $channelLabel · @${debt.from} · ${_agoLabel(debt.daysAgo)}',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: _textPrimary,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            '$icon $label $channelLabel · @${debt.from} · ${_agoLabel(debt.daysAgo)}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          '"${debt.preview}"',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w600,
-            color: _textSecondary,
+          const SizedBox(height: 6),
+          Text(
+            '"${debt.preview}"',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              height: 1.25,
+              fontWeight: FontWeight.w600,
+              color: _textSecondary,
+            ),
           ),
-        ),
-      ],
+        ],
+      )
     );
   }
 }
@@ -337,112 +344,121 @@ class CommitmentDebtRow extends StatelessWidget {
     required this.debt,
   });
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
     final bool showWarning = debt.daysStale >= 10;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          '${debt.taskId} · "${debt.title}"',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: _textPrimary,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            '${debt.taskId} · "${debt.title}"',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Status: ${debt.status} · Last commit: ${debt.daysStale}d ago',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w600,
-            color: _textSecondary,
-          ),
-        ),
-        if (showWarning) ...<Widget>[
           const SizedBox(height: 6),
           Text(
-            '⚠️ No Git activity matching this task',
+            'Status: ${debt.status} · Last commit: ${debt.daysStale}d ago',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontSize: 13,
               height: 1.25,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
               color: _textSecondary,
             ),
           ),
+          if (showWarning) ...<Widget>[
+            const SizedBox(height: 6),
+            Text(
+              '⚠️ No Git activity matching this task',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.25,
+                fontWeight: FontWeight.w700,
+                color: _textSecondary,
+              ),
+            ),
+          ],
         ],
-      ],
+      )
     );
   }
 }
 
 class StalenessDebtRow extends StatelessWidget {
   final StalenessDebt debt;
+  final VoidCallback? onOpen;
 
   const StalenessDebtRow({
     super.key,
     required this.debt,
+    this.onOpen,
   });
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
     final bool nobodyLooking = debt.reviews == 0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'PR #${debt.prNumber} · "${debt.title}" · ${debt.repo}',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: _textPrimary,
+    return GestureDetector(
+      onTap: onOpen,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'PR #${debt.prNumber} · "${debt.title}" · ${debt.repo}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Open ${debt.daysStale} days · ${debt.reviews} reviews',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w600,
-            color: _textSecondary,
-          ),
-        ),
-        if (nobodyLooking) ...<Widget>[
           const SizedBox(height: 6),
           Text(
-            "💡 Nobody's looking at it. Ping #frontend?",
+            'Open ${debt.daysStale} days · ${debt.reviews} reviews',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontSize: 13,
               height: 1.25,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
               color: _textSecondary,
             ),
           ),
+          if (nobodyLooking) ...<Widget>[
+            const SizedBox(height: 6),
+            Text(
+              "💡 Nobody's looking at it. Ping #frontend?",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.25,
+                fontWeight: FontWeight.w700,
+                color: _textSecondary,
+              ),
+            ),
+          ],
         ],
-      ],
+      )
     );
   }
 }
@@ -455,67 +471,70 @@ class DriftDebtRow extends StatelessWidget {
     required this.debt,
   });
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF94A3B8);
+  static const Color _textPrimary = Color(0xFF0F172A);
+  static const Color _textSecondary = Color(0xFF64748B);
   static const Color _driftAccent = Color(0xFFA855F7);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          '${debt.taskId} "${debt.taskTitle}" → marked ${debt.taskStatus}',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: _textPrimary,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'but PR #${debt.prNumber} is still ${debt.prStatus} in GitHub',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            height: 1.25,
-            fontWeight: FontWeight.w600,
-            color: _textSecondary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              '⚠️',
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                height: 1.25,
-                fontWeight: FontWeight.w800,
-                color: _driftAccent,
-              ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            '${debt.taskId} "${debt.taskTitle}" → marked ${debt.taskStatus}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                debt.contradiction,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'but PR #${debt.prNumber} is still ${debt.prStatus} in GitHub',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              height: 1.25,
+              fontWeight: FontWeight.w600,
+              color: _textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '⚠️',
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   height: 1.25,
                   fontWeight: FontWeight.w800,
-                  color: _driftAccent.withValues(alpha: 0.95),
+                  color: _driftAccent,
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  debt.contradiction,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    height: 1.25,
+                    fontWeight: FontWeight.w800,
+                    color: _driftAccent.withValues(alpha: 0.95),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      )
     );
   }
 }
