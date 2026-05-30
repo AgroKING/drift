@@ -6,7 +6,7 @@ tables:
   - name: issues
     description: Mock Linear issues for Drift demo
     source:
-      location: "file:////Users/milankc/proj/data/"
+      location: "file:///home/agp/PycharmProjects/drift/data/"
       glob: "linear_issues.jsonl"
     columns:
       - name: id

@@ -6,7 +6,7 @@ tables:
   - name: pages
     description: Mock Notion pages for Drift demo
     source:
-      location: "file:////Users/milankc/proj/data/"
+      location: "file:///home/agp/PycharmProjects/drift/data/"
       glob: "notion_pages.jsonl"
     columns:
       - name: id
