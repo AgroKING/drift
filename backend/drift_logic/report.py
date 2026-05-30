@@ -1,9 +1,4 @@
-"""Build the final Drift report consumed by the frontend.
-
-Person 3 calls ``build_drift_report(user=..., review_rows=[...], ...)`` with
-raw row dicts straight from Coral query results.  This module normalises them
-into Pydantic models, scores them, and returns a ``DriftReport``.
-"""
+"""Build the final Drift report parsed into validated models and scored for the UI."""
 
 from __future__ import annotations
 
@@ -58,13 +53,10 @@ def build_drift_report(
     generated_at: str | None = None,
     history_path: str | Path | None = None,
     write_history: bool = False,
+    insight: str | None = None,
+    suggested_plan: list[str] | None = None,
 ) -> DriftReport:
-    """End-to-end report builder.
-
-    Accepts the raw row lists that Person 3 fetches from Coral, normalises
-    them into Pydantic models, calculates a score, picks a top action, and
-    optionally persists score history.
-    """
+    """Build a DriftReport from raw tool query rows, score them, and log history."""
     if not user.strip():
         raise ValueError("user is required")
 
@@ -89,6 +81,8 @@ def build_drift_report(
         score_delta=score_delta,
         top_action=choose_top_action(debts),
         debts=debts,
+        insight=insight,
+        suggested_plan=suggested_plan or [],
     )
 
     if write_history and history_path:
