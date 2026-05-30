@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/drift_report.dart';
+import 'package:drift/models/drift_report.dart';
+import 'package:drift/theme/app_theme.dart';
 
 class TopActionBanner extends StatelessWidget {
   final TopAction topAction;
@@ -12,68 +13,62 @@ class TopActionBanner extends StatelessWidget {
     required this.topAction,
   });
 
-  static const Color _surface = Color(0xFFFFFFFF);
-  static const Color _border = Color(0xFFE2E8F0);
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
-
   Color _accentForType(String type) {
-    // Accent color that matches the action type/category.
     switch (type.toLowerCase()) {
       case 'review':
-        return const Color(0xFFEF4444);
+        return AppTheme.review;
       case 'reply':
-        return const Color(0xFFF97316);
+        return AppTheme.reply;
       case 'commitment':
-        return const Color(0xFFEAB308);
+        return AppTheme.commitment;
       case 'staleness':
-        return const Color(0xFF3B82F6);
+        return AppTheme.staleness;
       case 'drift':
-        return const Color(0xFFA855F7);
+        return AppTheme.drift;
       default:
-        return _textSecondary;
+        return AppTheme.textMuted;
     }
   }
 
   String _ctaLabelForUrl(Uri uri) {
     final String host = uri.host.toLowerCase();
-    // CTA label based on well-known hosts.
-    if (host.contains('github.com')) return '[ Open in GitHub → ]';
-    if (host.contains('linear.app')) return '[ Open in Linear → ]';
-    if (host.contains('slack.com')) return '[ Open in Slack → ]';
-    if (host.contains('notion.so')) return '[ Open in Notion → ]';
-
-    return '[ Open link → ]';
+    if (host.contains('github.com')) return 'Open in GitHub →';
+    if (host.contains('linear.app')) return 'Open in Linear →';
+    if (host.contains('slack.com')) return 'Open in Slack →';
+    if (host.contains('notion.so')) return 'Open in Notion →';
+    return 'Open link →';
   }
 
   Future<void> _openUrl(BuildContext context) async {
-    final Uri? uri = Uri.tryParse(topAction.url);
-    // Validate the URL before attempting to open it.
+    final String? url = topAction.url;
+    if (url == null || url.isEmpty) return;
+    
+    final Uri? uri = Uri.tryParse(url);
     if (uri == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid URL.')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid URL.')),
+        );
+      }
       return;
     }
 
-    final bool ok = await launchUrl(
-      uri,
-      webOnlyWindowName: '_blank',
-    );
+    final bool ok = await launchUrl(uri, webOnlyWindowName: '_blank');
 
     if (!ok) {
-      // If the platform failed to open the link, notify the user.
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open link.')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open link.')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final Color accent = _accentForType(topAction.type);
-    final Uri? uri = Uri.tryParse(topAction.url);
+    final String? url = topAction.url;
+    final Uri? uri = (url != null && url.isNotEmpty) ? Uri.tryParse(url) : null;
 
     return Container(
       width: double.infinity,
@@ -84,40 +79,29 @@ class TopActionBanner extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: <Color>[
-            // Soft accent glow fading outwards.
-            accent.withValues(alpha: 0.14),
+            accent.withValues(alpha: 0.35),
             accent.withValues(alpha: 0.0),
           ],
         ),
         boxShadow: <BoxShadow>[
-          // Ambient backlight glow in the debt category accent color.
           BoxShadow(
             color: accent.withValues(alpha: 0.10),
             blurRadius: 32,
-            spreadRadius: 2,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
             color: accent.withValues(alpha: 0.06),
             blurRadius: 72,
-            spreadRadius: 14,
             offset: const Offset(0, 26),
           ),
         ],
       ),
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: _surface,
+          color: AppTheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: _border),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: Color(0x120F172A),
-              blurRadius: 18,
-              offset: Offset(0, 8),
-            ),
-          ],
+          border: Border.all(color: AppTheme.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,11 +111,12 @@ class TopActionBanner extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
-                letterSpacing: 1.4,
-                color: _textSecondary,
+                letterSpacing: 1.2,
+                height: 1.2,
+                color: AppTheme.textSecondary,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -139,41 +124,40 @@ class TopActionBanner extends StatelessWidget {
                   child: Text(
                     '🎯 ${topAction.text}',
                     style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      height: 1.35,
-                      color: _textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 1.5,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
-                TextButton(
-                  // Opens the action URL in a new browser tab/window.
-                  onPressed: () async => _openUrl(context),
-                  style: TextButton.styleFrom(
-                    foregroundColor: _textPrimary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
+                if (uri != null) ...[
+                  const SizedBox(width: 24),
+                  TextButton(
+                    onPressed: () async => _openUrl(context),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppTheme.textPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(999),
+                        side: BorderSide(
+                          color: accent.withValues(alpha: 0.35),
+                        ),
+                      ),
+                      backgroundColor: AppTheme.surfaceOverlay,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(
-                        color: accent.withValues(alpha: 0.35),
+                    child: Text(
+                      _ctaLabelForUrl(uri),
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    backgroundColor: accent.withValues(alpha: 0.08),
                   ),
-                  child: Text(
-                    // Use a host-specific CTA when available, otherwise fallback.
-                    uri == null ? '[ Open → ]' : _ctaLabelForUrl(uri),
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
+                ],
               ],
             ),
           ],

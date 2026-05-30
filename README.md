@@ -81,15 +81,15 @@ To remain efficient, Drift makes exactly **one** LLM request per scan.
 
 ### Frontend Setup
 
-1. **Run in Development Mode:**
-   ```bash
-   cd frontend
-   flutter run -d chrome
-   ```
+Drift's frontend is a high-performance, web-native dashboard (pure HTML5 + Tailwind CSS + Vanilla JS) served directly from `frontend/web/`. There is no compilation or build overhead.
 
-2. **Build for Web:**
+1. **Run the Frontend Server:**
+   Start the local frontend server:
    ```bash
-   cd frontend
-   flutter build web
+   ./scripts/run_frontend.sh
    ```
-   This generates production web assets at `frontend/build/web/`.
+   This hosts the dashboard at `http://localhost:8081`.
+
+2. **Toggle Modes:**
+   - **MOCK Mode (Default):** Loads static, structured data from `assets/mock_drift_report.json`.
+   - **LIVE Mode:** Make sure you are running the backend scan and the CORS server via `./scripts/serve_report.sh`. Then, toggle the button in the top-right navbar to **LIVE** to fetch and render real-time attention debt data.

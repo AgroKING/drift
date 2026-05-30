@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Score header widget for Drift dashboard.
-///
-/// Displays the main score, a delta indicator (↑/↓ with accent color),
-/// and the generated timestamp in a human-readable format.
+import 'package:drift/theme/app_theme.dart';
+
 class ScoreHeader extends StatelessWidget {
   final int score;
   final int scoreDelta;
@@ -17,27 +15,8 @@ class ScoreHeader extends StatelessWidget {
     required this.generatedAt,
   });
 
-  static const Color _surface = Color(0xFFFFFFFF);
-  static const Color _border = Color(0xFFE2E8F0);
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
-
-  static const Color _deltaUpBad = Color(0xFFEF4444); // debt increased
-  static const Color _deltaDownGood = Color(0xFF16A34A); // debt decreased
-
   static const List<String> _months = <String>[
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
   ];
 
   String _formatGeneratedAt(DateTime dateTime) {
@@ -59,46 +38,26 @@ class ScoreHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isUp = scoreDelta > 0;
     final String arrow = isUp ? '↑' : '↓';
-    final Color deltaColor = isUp ? _deltaUpBad : _deltaDownGood;
+    final Color deltaColor = isUp ? AppTheme.scoreUp : AppTheme.scoreDown;
     final int deltaMagnitude = scoreDelta.abs();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        // Row(
-        //   children: [
-        //     Image.asset(
-        //       'assets/logo.png',
-        //       width: 32,
-        //       height: 32,
-        //      ),
-        //      SizedBox(width: 8),
-        //     Text(
-        //       'DRIFT',
-        //       style: GoogleFonts.inter(
-        //         fontSize: 18,
-        //         fontWeight: FontWeight.w700,
-        //         letterSpacing: 1.4,
-        //         color: _textPrimary,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        const SizedBox(height: 16),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: _surface,
+                color: AppTheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: _border),
+                border: Border.all(color: AppTheme.border),
                 boxShadow: const <BoxShadow>[
                   BoxShadow(
-                    color: Color(0x120F172A),
-                    blurRadius: 18,
-                    offset: Offset(0, 8),
+                    color: Color(0x40000000), // 0.25 alpha black
+                    blurRadius: 24,
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
@@ -112,7 +71,7 @@ class ScoreHeader extends StatelessWidget {
                       fontSize: 56,
                       height: 1.0,
                       fontWeight: FontWeight.w800,
-                      color: _textPrimary,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -127,7 +86,7 @@ class ScoreHeader extends StatelessWidget {
                           color: deltaColor,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 4),
                       Text(
                         '$deltaMagnitude',
                         style: GoogleFonts.inter(
@@ -141,44 +100,34 @@ class ScoreHeader extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 24),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Attention Debt Score',
-                      style: GoogleFonts.inter(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700,
-                        color: _textPrimary,
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Attention Debt Score',
+                    style: GoogleFonts.inter(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      height: 1.25,
+                      color: AppTheme.textPrimary,
                     ),
-                    // const SizedBox(height: 6),
-                    // Text(
-                    //   '(red if positive, green if negative delta)',
-                    //   style: GoogleFonts.inter(
-                    //     fontSize: 14,
-                    //     fontWeight: FontWeight.w500,
-                    //     color: _textSecondary,
-                    //   ),
-                    // ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Generated: ${_formatGeneratedAt(generatedAt)}',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      height: 1.3,
+                      color: AppTheme.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 14),
-        Text(
-          'Generated: ${_formatGeneratedAt(generatedAt)}',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: _textSecondary,
-          ),
         ),
       ],
     );

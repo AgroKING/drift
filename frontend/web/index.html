@@ -1,46 +1,901 @@
 <!DOCTYPE html>
-<html>
+<html class="dark" lang="en">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Drift - Attention Debt Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#00285d",
+                        "review": "#EF4444",
+                        "surface-container": "var(--surface-container)",
+                        "on-background": "#e2e2eb",
+                        "on-tertiary": "#002e6a",
+                        "inverse-on-surface": "#2e3037",
+                        "on-surface-variant": "#bcc9c6",
+                        "reply": "#F97316",
+                        "outline-variant": "#3d4947",
+                        "textMuted": "#64748B",
+                        "surface-tint": "#6bd8cb",
+                        "tertiary-fixed": "#d8e2ff",
+                        "surfaceOverlay": "var(--surfaceOverlay)",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "warning": "#F59E0B",
+                        "inverse-primary": "#006a61",
+                        "secondary-container": "#6f00be",
+                        "error": "#EF4444",
+                        "textPrimary": "var(--textPrimary)",
+                        "surface-container-high": "#282a30",
+                        "surface-bright": "#373940",
+                        "on-error": "#690005",
+                        "on-primary": "#003732",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-secondary": "#490080",
+                        "surface-variant": "#33343b",
+                        "tertiary": "#adc6ff",
+                        "scoreDown": "#16A34A",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "success": "#22C55E",
+                        "on-surface": "var(--on-surface)",
+                        "inverse-surface": "var(--on-surface)",
+                        "surface-container-low": "#191b22",
+                        "surface-container-highest": "#33343b",
+                        "textSecondary": "var(--textSecondary)",
+                        "primary-container": "#29a195",
+                        "surface": "var(--surface)",
+                        "secondary-fixed": "#f0dbff",
+                        "background": "var(--background)",
+                        "primary-fixed-dim": "#6bd8cb",
+                        "tertiary-container": "#4d8eff",
+                        "on-tertiary-fixed": "#001a42",
+                        "border": "var(--border)",
+                        "surfaceElevated": "var(--surfaceElevated)",
+                        "surface-container-lowest": "#0c0e14",
+                        "outline": "#879391",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "on-secondary-container": "#d6a9ff",
+                        "error-container": "#93000a",
+                        "borderSubtle": "var(--borderSubtle)",
+                        "surface-dim": "var(--background)",
+                        "borderFocus": "rgba(255,255,255,0.16)",
+                        "scoreUp": "#EF4444",
+                        "on-secondary-fixed": "#2c0051",
+                        "secondary": "#ddb7ff",
+                        "commitment": "#EAB308",
+                        "on-primary-container": "#00302b",
+                        "staleness": "#3B82F6",
+                        "drift": "#A855F7",
+                        "on-primary-fixed-variant": "#005049",
+                        "on-primary-fixed": "#00201d",
+                        "primary-fixed": "#89f5e7",
+                        "primary": "#6bd8cb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "xl": "32px",
+                        "section": "40px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "score-xl": ["Inter"],
+                        "display-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption": ["11px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "h3": ["16px", { "lineHeight": "1.35", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "h1": ["28px", { "lineHeight": "1.25", "fontWeight": "700" }],
+                        "h2": ["20px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "score-xl": ["56px", { "lineHeight": "1.0", "fontWeight": "800" }],
+                        "display-sm": ["36px", { "lineHeight": "1.15", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "1.45", "fontWeight": "500" }],
+                        "label": ["12px", { "lineHeight": "1.2", "letterSpacing": "1.2px", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Color System Variables */
+        :root, html.dark {
+            --background: #111319;
+            --surface: #181B23;
+            --surfaceElevated: #1E2230;
+            --textPrimary: #F1F5F9;
+            --textSecondary: #94A3B8;
+            --border: rgba(255,255,255,0.08);
+            --borderSubtle: rgba(255,255,255,0.04);
+            --surface-container: #1e1f26;
+            --surfaceOverlay: rgba(255,255,255,0.04);
+            --on-surface: #e2e2eb;
+            --spotlight-opacity: 0.06;
+        }
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+        html.light {
+            --background: #F8F9FA;
+            --surface: #FFFFFF;
+            --surfaceElevated: #FFFFFF;
+            --textPrimary: #0F172A;
+            --textSecondary: #64748B;
+            --border: #E2E8F0;
+            --borderSubtle: #F1F5F9;
+            --surface-container: #F1F5F9;
+            --surfaceOverlay: rgba(15,23,42,0.04);
+            --on-surface: #0f172a;
+            --spotlight-opacity: 0.03;
+        }
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+        .tabular-nums { font-variant-numeric: tabular-nums; } 
+        .glow-review { box-shadow: 0 4px 24px -4px rgba(239, 68, 68, 0.15); } 
+        .glow-reply { box-shadow: 0 4px 24px -4px rgba(249, 115, 22, 0.15); } 
+        .glow-commitment { box-shadow: 0 4px 24px -4px rgba(234, 179, 8, 0.15); } 
+        .glow-staleness { box-shadow: 0 4px 24px -4px rgba(59, 130, 246, 0.15); } 
+        .glow-drift { box-shadow: 0 4px 24px -4px rgba(168, 85, 247, 0.15); }
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
+        /* Light Mode Shadow Enhancements */
+        html.light .bg-surface, html.light .bg-surfaceElevated, html.light nav {
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 8px -1px rgba(15, 23, 42, 0.03) !important;
+        }
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+        @keyframes blob-drift-1 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(12vw, -10vh) scale(1.15); }
+            66% { transform: translate(-8vw, 15vh) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes blob-drift-2 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            40% { transform: translate(-14vw, 10vh) scale(1.05); }
+            70% { transform: translate(10vw, -12vh) scale(0.85); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes blob-drift-3 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            30% { transform: translate(15vw, 12vh) scale(0.9); }
+            60% { transform: translate(-10vw, -15vh) scale(1.1); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes blob-drift-4 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            35% { transform: translate(-10vw, -12vh) scale(1.1); }
+            75% { transform: translate(12vw, 10vh) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes blob-drift-5 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            25% { transform: translate(12vw, -10vh) scale(0.95); }
+            65% { transform: translate(-12vw, 12vh) scale(1.15); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="frontend">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+        .mesh-blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.15;
+            border-radius: 50%;
+            transition: opacity 0.5s ease;
+        }
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/logo.png" />
+        html.light .mesh-blob {
+            opacity: 0.22;
+            filter: blur(120px);
+        }
 
-  <title>Drift</title>
-  <link rel="manifest" href="manifest.json">
+        html.light .noise-overlay {
+            opacity: 0.055;
+        }
+
+        html.light .wave-path-1 {
+            stroke: #0d9488 !important;
+            stroke-width: 3px;
+        }
+
+        html.light .wave-path-2 {
+            stroke: #3b82f6 !important;
+            stroke-width: 2.5px;
+        }
+
+        .blob-review { background-color: #EF4444; width: 40vw; height: 40vw; top: -10%; left: -10%; animation: blob-drift-1 25s infinite ease-in-out; }
+        .blob-reply { background-color: #F97316; width: 35vw; height: 35vw; top: 20%; right: -10%; animation: blob-drift-2 28s infinite ease-in-out; }
+        .blob-commitment { background-color: #EAB308; width: 45vw; height: 45vw; bottom: -20%; left: 20%; animation: blob-drift-3 32s infinite ease-in-out; }
+        .blob-staleness { background-color: #3B82F6; width: 30vw; height: 30vw; top: 40%; left: 10%; animation: blob-drift-4 22s infinite ease-in-out; }
+        .blob-drift { background-color: #A855F7; width: 40vw; height: 40vw; bottom: 10%; right: 10%; animation: blob-drift-5 30s infinite ease-in-out; }
+
+        #mouse-spotlight {
+            background: radial-gradient(circle 600px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(13, 148, 136, var(--spotlight-opacity, 0.06)), transparent 80%);
+        }
+
+        /* Dynamic Card Hover Effects */
+        #top-priority-container > section,
+        #ai-insight-card,
+        #dashboard-content .grid > div {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+        #top-priority-container > section:hover,
+        #ai-insight-card:hover,
+        #dashboard-content .grid > div:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.16) !important;
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Nav Glow Effects */
+        .nav-link-glow {
+            position: relative;
+        }
+        .nav-link-glow::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-primary, #6bd8cb);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 8px var(--color-primary, #6bd8cb);
+        }
+        .nav-link-glow:hover::after, .nav-active::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .brand-glow {
+            text-shadow: 0 0 12px rgba(107, 216, 203, 0.5);
+        }
+
+        .nav-glass-border {
+            background: linear-gradient(to right, rgba(255,255,255,0.05), rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            padding: 1px;
+        }
+        
+        html.light .nav-glass-border {
+            background: linear-gradient(to right, rgba(15,23,42,0.02), rgba(15,23,42,0.05), rgba(15,23,42,0.02));
+        }
+
+        /* Theme Toggle Icon Spin */
+        #theme-toggle:hover #theme-icon {
+            transform: rotate(180deg);
+        }
+        #theme-icon {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Clickable Item Row Interactive Hover slide and highlight */
+        #review-list > div,
+        #staleness-list > div {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #review-list > div:hover,
+        #staleness-list > div:hover {
+            transform: translateX(6px);
+        }
+        #review-list > div:hover .text-textPrimary,
+        #staleness-list > div:hover .text-textPrimary {
+            color: #6bd8cb !important;
+            text-shadow: 0 0 8px rgba(107, 216, 203, 0.3);
+        }
+        #review-list > div:hover .material-symbols-outlined,
+        #staleness-list > div:hover .material-symbols-outlined {
+            transform: translate(3px, -3px) scale(1.1);
+            color: #6bd8cb !important;
+        }
+        #review-list .material-symbols-outlined,
+        #staleness-list .material-symbols-outlined {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Passive Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            content: "";
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 9999;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Animated Background Waves */
+        @keyframes wave-move-1 {
+            0% { transform: translateY(0px) scaleY(1); }
+            50% { transform: translateY(-15px) scaleY(1.05); }
+            100% { transform: translateY(0px) scaleY(1); }
+        }
+        @keyframes wave-move-2 {
+            0% { transform: translateY(0px) scaleY(1) rotate(0deg); }
+            50% { transform: translateY(12px) scaleY(0.95) rotate(0.5deg); }
+            100% { transform: translateY(0px) scaleY(1) rotate(0deg); }
+        }
+        .wave-path-1 {
+            animation: wave-move-1 12s infinite ease-in-out;
+            transform-origin: center;
+        }
+        .wave-path-2 {
+            animation: wave-move-2 16s infinite ease-in-out;
+            transform-origin: center;
+            opacity: 0.7;
+        }
+    </style>
+    <!-- Frontend JS logic -->
+    <script src="app.js" defer></script>
 </head>
-<body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
+<body class="bg-transparent text-textPrimary antialiased selection:bg-primary/20 selection:text-primary min-h-screen font-body-md transition-colors duration-300">
+    <!-- Noise grain overlay -->
+    <div class="noise-overlay"></div>
 
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
-  <script src="flutter_bootstrap.js" async></script>
+    <!-- Interactive Background -->
+    <div class="fixed inset-0 z-[-2] bg-background overflow-hidden pointer-events-none transition-colors duration-300">
+        <div class="mesh-blob blob-review"></div>
+        <div class="mesh-blob blob-reply"></div>
+        <div class="mesh-blob blob-commitment"></div>
+        <div class="mesh-blob blob-staleness"></div>
+        <div class="mesh-blob blob-drift"></div>
+    </div>
+
+    <!-- Animated Background Waves -->
+    <div class="fixed inset-0 z-[-2] overflow-hidden pointer-events-none opacity-[0.22] dark:opacity-[0.08]">
+        <svg class="absolute bottom-0 w-full h-[40vh] min-h-[300px]" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+            <path class="wave-path-1" fill="none" stroke="#6bd8cb" stroke-width="2" d="M0,96 C288,160 576,32 864,128 C1152,224 1344,160 1440,128 L1440,320 L0,320 Z"/>
+            <path class="wave-path-2" fill="none" stroke="#3B82F6" stroke-width="1.5" d="M0,192 C288,96 576,224 864,128 C1152,32 1344,160 1440,192 L1440,320 L0,320 Z"/>
+        </svg>
+    </div>
+    <div class="fixed inset-0 z-[-1] pointer-events-none" id="mouse-spotlight"></div>
+
+    <!-- TopNavBar Container for Floating Effect -->
+    <div class="sticky top-0 z-50 pt-md px-md md:px-lg max-w-[1024px] mx-auto">
+        <div class="nav-glass-border rounded-xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]">
+            <!-- TopNavBar -->
+            <nav class="bg-surface/35 backdrop-blur-3xl text-primary font-body-md text-body-md rounded-[11px] overflow-hidden transition-all duration-300">
+                <div class="px-xl flex justify-between items-center h-16">
+                    <div class="flex items-center gap-xl">
+                        <div class="flex items-center gap-2">
+                            <span class="font-h2 text-h2 font-extrabold text-primary tracking-tighter brand-glow">Drift</span>
+                            <span class="font-caption text-[9px] bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded-sm uppercase tracking-widest">Beta</span>
+                        </div>
+                        <div class="hidden md:flex items-center gap-lg">
+                            <a id="nav-dashboard" class="text-primary font-bold nav-link-glow cursor-pointer nav-active">Dashboard</a>
+                            <a id="nav-getting-started" class="text-textSecondary font-medium hover:text-primary transition-colors duration-200 nav-link-glow cursor-pointer">Getting Started</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-md">
+                        <!-- Theme Toggle Button -->
+                        <div id="theme-toggle" class="flex items-center justify-center w-9 h-9 rounded-lg bg-surfaceElevated border border-borderSubtle cursor-pointer hover:bg-surfaceOverlay transition-all duration-200 text-textPrimary shadow-sm" title="Toggle Theme">
+                            <span id="theme-icon" class="material-symbols-outlined text-[20px] select-none">light_mode</span>
+                        </div>
+
+                        <!-- Hardware Toggle Style Live Button -->
+                        <div id="live-toggle" class="flex items-center gap-sm bg-surfaceElevated rounded-lg px-3 py-1.5 border border-borderSubtle shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),_0_1px_1px_rgba(255,255,255,0.05)] cursor-pointer hover:bg-surfaceOverlay transition-colors">
+                            <div class="relative w-3 h-3" id="toggle-indicator">
+                                <span class="absolute inset-0 rounded-full bg-textMuted opacity-40"></span>
+                                <span class="absolute inset-0 rounded-full bg-textMuted"></span>
+                            </div>
+                            <span id="toggle-text" class="font-label text-label text-textSecondary tracking-widest">MOCK</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <main class="max-w-[960px] mx-auto px-xl py-section relative z-10 mt-md">
+        <!-- Status / Error Banner (Hidden by default) -->
+        <div id="status-container" class="hidden mb-md"></div>
+
+        <!-- Main Loading Indicator -->
+        <div id="main-loader" class="flex flex-col items-center justify-center py-xxl gap-md animate-fade-in-up">
+            <div class="relative w-12 h-12">
+                <span class="absolute inset-0 rounded-full border-4 border-primary/20 animate-pulse"></span>
+                <span class="absolute inset-0 rounded-full border-4 border-t-primary animate-spin"></span>
+            </div>
+            <p class="text-textSecondary font-body-sm">Loading Attention Debt Report...</p>
+        </div>
+
+        <!-- Getting Started Page (Initially hidden, toggled via nav/routing) -->
+        <div id="getting-started-content" class="hidden space-y-xxl py-sm animate-fade-in-up">
+            <!-- Hero Section -->
+            <section class="text-center space-y-md">
+                <h1 class="font-display-lg text-display-lg text-textPrimary leading-tight tracking-tight">
+                    Your tools are talking past each other.<br>
+                    <span class="text-primary brand-glow">Let's fix that.</span>
+                </h1>
+                <p class="font-body-lg text-body-lg text-textSecondary max-w-2xl mx-auto leading-relaxed">
+                    Drift continuously monitors your cross-tool workflows—mapping open GitHub PRs, pending Slack mentions, and active Linear tasks to eliminate hidden attention debt automatically.
+                </p>
+                <div class="pt-md flex justify-center">
+                    <button id="get-started-btn" class="bg-primary hover:bg-primary/90 text-on-primary-container px-lg py-3.5 rounded-xl font-body-lg text-body-lg font-bold shadow-[0_4px_20px_-4px_rgba(107,216,203,0.4)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                        Get Started
+                    </button>
+                </div>
+            </section>
+
+            <!-- How it works flow -->
+            <section class="space-y-xl pt-lg border-t border-borderSubtle">
+                <h2 class="font-display-sm text-display-sm text-center text-textPrimary">How It Works</h2>
+                
+                <div class="flex flex-col items-center justify-center gap-lg">
+                    <!-- Glassmorphic Card for the Diagram -->
+                    <div class="bg-surface/40 backdrop-blur-md border border-borderSubtle rounded-2xl p-md md:p-lg shadow-[0_12px_40px_-12px_rgba(0,0,0,0.5)] max-w-3xl w-full flex justify-center">
+                        <img src="assets/architecture_diagram.png" alt="Drift Architecture Diagram" class="rounded-xl max-w-full h-auto select-none border border-borderSubtle/50">
+                    </div>
+                    
+                    <p class="font-body-md text-body-md text-textSecondary text-center max-w-2xl mt-md">
+                        Drift is powered by the **Coral Context Engine** which pools live data across GitHub, Slack, Linear, and Notion. The Drift background agent analyzes this data, calculates attention debt metrics, and writes reports served directly to your dashboard.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FAQs Grid -->
+            <section class="space-y-xl pt-lg border-t border-borderSubtle">
+                <div class="text-center space-y-xs">
+                    <h2 class="font-display-sm text-display-sm text-textPrimary">FAQs</h2>
+                    <p class="font-body-lg text-body-lg text-textSecondary">Everything you need to know about the Drift ecosystem</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md max-w-4xl mx-auto">
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> What is Coral?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Coral serves as the foundational context management layer, unifying and standardizing raw real-time event updates from disparate developer tools into actionable team metrics.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> What is Drift?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Drift is an automation and attention debt visibility engine built on top of Coral. It flags cross-tool contradictions, calculates context blockages, and highlights stuck items across platforms.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> What is Attention Debt?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Attention debt accumulates when cross-tool tasks get stranded—such as code reviews left waiting in GitHub or action items discussed in Slack that haven't been tracked in Linear.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> How does Drift find tool contradictions?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Drift reads background metadata from your integrated platforms to flag mismatches, like a task marked 'Done' in Linear while its corresponding GitHub PR is still open and unmerged.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> Does this require complex local installation?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Not at all. The interface operates completely as a lightweight web app reading structured JSON data contracts generated by a lightweight background agent.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> How frequent are the synchronization cycles?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Synchronization runs dynamically via background daemon processes, ensuring your dashboard metrics refresh instantly as work updates across tools.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> Which platforms are supported by Coral?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            Currently, the platform fully supports deep bidirectional context tracking for GitHub, Linear, Slack, and Notion.
+                        </p>
+                    </div>
+                    <div class="bg-surface border border-borderSubtle rounded-xl p-md space-y-xs hover:border-primary/20 transition-all duration-300">
+                        <h4 class="font-h3 text-h3 text-textPrimary flex items-center gap-2">
+                            <span class="text-primary text-lg">❓</span> How is the score calculated?
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-textSecondary leading-relaxed pl-7">
+                            The score aggregates unaddressed cross-tool items weighted by their stagnation delta time, providing a tangible metric where positive numbers indicate an increasing bottleneck.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Dashboard Content (hidden until loaded) -->
+        <div id="dashboard-content" class="hidden space-y-section">
+            <!-- Header & Score Section -->
+            <section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-xl animate-fade-in-up" style="animation-delay: 0.1s;">
+                <div>
+                    <h1 class="font-display-sm text-display-sm mb-xs">Attention Debt</h1>
+                    <p class="font-body-lg text-body-lg text-textSecondary" id="user-subtitle">Your current cognitive load and blocking tasks.</p>
+                </div>
+                <div class="flex items-end gap-md">
+                    <div class="flex flex-col items-end">
+                        <span class="font-caption text-caption text-textMuted uppercase tracking-wider">Total Score</span>
+                        <div class="flex items-center gap-sm">
+                            <span id="total-score" class="font-score-xl text-score-xl tabular-nums tracking-tighter">--</span>
+                            <div id="score-delta-badge" class="flex items-center px-2 py-1 rounded">
+                                <span id="score-delta-icon" class="material-symbols-outlined text-sm font-bold" style="font-variation-settings: 'wght' 700;"></span>
+                                <span id="score-delta-value" class="font-h3 text-h3 tabular-nums">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top Priority Banner -->
+            <div id="top-priority-container"></div>
+
+            <!-- AI Insight Card -->
+            <section id="ai-insight-card" class="bg-surface/20 backdrop-blur-[8px] border border-primary/10 rounded-xl p-lg relative overflow-hidden animate-fade-in-up hidden" style="animation-delay: 0.3s;">
+                <div class="absolute inset-0 bg-primary/[0.02] pointer-events-none"></div>
+                <div class="relative z-10 flex items-start gap-md">
+                    <span class="material-symbols-outlined text-primary text-2xl">auto_awesome</span>
+                    <div class="w-full">
+                        <h3 class="font-h3 text-h3 text-primary mb-2">AI Insight</h3>
+                        <p id="ai-insight-text" class="font-body-lg text-body-lg text-textPrimary"></p>
+                        
+                        <!-- Action Plan list -->
+                        <div id="ai-plan-container" class="hidden mt-lg pt-lg border-t border-borderSubtle">
+                            <h4 class="font-label text-label text-textSecondary mb-md tracking-wider">SUGGESTED ACTION PLAN</h4>
+                            <div id="ai-plan-list" class="space-y-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <!-- Review Debt -->
+                <div class="bg-surface rounded-xl border border-borderSubtle relative overflow-hidden glow-review animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-review"></div>
+                    <div class="p-md border-b border-borderSubtle flex justify-between items-center">
+                        <h3 class="font-h3 text-h3 text-textPrimary flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-review text-sm">visibility</span>
+                            Review Debt
+                        </h3>
+                        <span id="review-count" class="font-caption text-caption bg-surfaceOverlay px-2 py-1 rounded text-textSecondary">0 Items</span>
+                    </div>
+                    <div class="divide-y divide-borderSubtle" id="review-list"></div>
+                </div>
+
+                <!-- Reply Debt -->
+                <div class="bg-surface rounded-xl border border-borderSubtle relative overflow-hidden glow-reply animate-fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-reply"></div>
+                    <div class="p-md border-b border-borderSubtle flex justify-between items-center">
+                        <h3 class="font-h3 text-h3 text-textPrimary flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-reply text-sm">forum</span>
+                            Reply Debt
+                        </h3>
+                        <span id="reply-count" class="font-caption text-caption bg-surfaceOverlay px-2 py-1 rounded text-textSecondary">0 Items</span>
+                    </div>
+                    <div class="divide-y divide-borderSubtle" id="reply-list"></div>
+                </div>
+
+                <!-- Commitment Debt -->
+                <div class="bg-surface rounded-xl border border-borderSubtle relative overflow-hidden glow-commitment animate-fade-in-up" style="animation-delay: 0.6s;">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-commitment"></div>
+                    <div class="p-md border-b border-borderSubtle flex justify-between items-center">
+                        <h3 class="font-h3 text-h3 text-textPrimary flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-commitment text-sm">task_alt</span>
+                            Commitment Debt
+                        </h3>
+                        <span id="commitment-count" class="font-caption text-caption bg-surfaceOverlay px-2 py-1 rounded text-textSecondary">0 Items</span>
+                    </div>
+                    <div class="divide-y divide-borderSubtle" id="commitment-list"></div>
+                </div>
+
+                <!-- Staleness Debt -->
+                <div class="bg-surface rounded-xl border border-borderSubtle relative overflow-hidden glow-staleness animate-fade-in-up" style="animation-delay: 0.7s;">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-staleness"></div>
+                    <div class="p-md border-b border-borderSubtle flex justify-between items-center">
+                        <h3 class="font-h3 text-h3 text-textPrimary flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-staleness text-sm">hourglass_empty</span>
+                            Staleness Debt
+                        </h3>
+                        <span id="staleness-count" class="font-caption text-caption bg-surfaceOverlay px-2 py-1 rounded text-textSecondary">0 Items</span>
+                    </div>
+                    <div class="divide-y divide-borderSubtle" id="staleness-list"></div>
+                </div>
+
+                <!-- Drift Debt -->
+                <div class="bg-surface rounded-xl border border-borderSubtle relative overflow-hidden glow-drift md:col-span-2 animate-fade-in-up" style="animation-delay: 0.8s;">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-drift"></div>
+                    <div class="p-md border-b border-borderSubtle flex justify-between items-center">
+                        <h3 class="font-h3 text-h3 text-textPrimary flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-drift text-sm">compare_arrows</span>
+                            Drift Debt
+                        </h3>
+                        <span id="drift-count" class="font-caption text-caption bg-surfaceOverlay px-2 py-1 rounded text-textSecondary">0 Conflicts</span>
+                    </div>
+                    <div class="divide-y divide-borderSubtle" id="drift-list"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Documentation Page -->
+        <div id="documentation-content" class="hidden space-y-xxl py-sm animate-fade-in-up">
+            <section class="space-y-md">
+                <h1 class="font-display-sm text-display-sm text-textPrimary">Documentation</h1>
+                <p class="font-body-lg text-body-lg text-textSecondary">
+                    Understand the architecture, components, and integration parameters of the Drift attention debt engine.
+                </p>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+                <!-- Sidebar -->
+                <aside class="md:col-span-1 space-y-md border-r border-borderSubtle pr-md">
+                    <h4 class="font-label text-label text-primary tracking-wider">GUIDES</h4>
+                    <ul class="space-y-sm text-body-sm font-medium">
+                        <li><a href="#doc-arch" class="text-textPrimary hover:text-primary transition-colors">Core Architecture</a></li>
+                        <li><a href="#doc-config" class="text-textSecondary hover:text-primary transition-colors">Configuration</a></li>
+                        <li><a href="#doc-integrations" class="text-textSecondary hover:text-primary transition-colors">Tool Integrations</a></li>
+                    </ul>
+                </aside>
+
+                <!-- Doc body -->
+                <div class="md:col-span-3 space-y-xl">
+                    <section id="doc-arch" class="space-y-sm bg-surface border border-borderSubtle rounded-xl p-lg">
+                        <h3 class="font-h2 text-h2 text-textPrimary">Core Architecture</h3>
+                        <p class="text-textSecondary font-body-md leading-relaxed">
+                            Drift unifies context across developer platforms using the **Coral Context Engine**. The background synchronization processes fetch raw event feeds from GitHub, Linear, Slack, and Notion APIs, normalizing them into a shared schema.
+                        </p>
+                        <div class="bg-surfaceElevated p-md rounded-lg border border-borderSubtle">
+                            <span class="font-label text-label text-textMuted block mb-1">CORAL LIFECYCLE</span>
+                            <p class="text-body-sm text-textSecondary">
+                                Raw Event Feeds &rarr; Normalization &rarr; Conflict Resolution &rarr; JSON Report &rarr; Dashboard Render.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section id="doc-config" class="space-y-sm bg-surface border border-borderSubtle rounded-xl p-lg">
+                        <h3 class="font-h2 text-h2 text-textPrimary">Configuration</h3>
+                        <p class="text-textSecondary font-body-md leading-relaxed">
+                            Integration credentials and polling settings are stored in the local `.env` configuration file located at the project root directory.
+                        </p>
+                        <pre class="bg-surfaceElevated text-xs font-mono text-textPrimary p-md rounded-lg border border-borderSubtle overflow-x-auto"># Port Configuration
+PORT=8080
+
+# GitHub Integration
+GITHUB_TOKEN=ghp_yourPersonalAccessTokenHere
+GITHUB_OWNER=acme-corp
+
+# Linear Integration
+LINEAR_API_KEY=lin_api_key_here</pre>
+                    </section>
+
+                    <section id="doc-integrations" class="space-y-sm bg-surface border border-borderSubtle rounded-xl p-lg">
+                        <h3 class="font-h2 text-h2 text-textPrimary">Tool Integrations</h3>
+                        <p class="text-textSecondary font-body-md leading-relaxed">
+                            Drift currently establishes deep context bindings for GitHub PR review processes, Slack channel mentions, Linear active issue trackers, and Notion internal wiki document systems.
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Support Page -->
+        <div id="api-status-content" class="hidden space-y-xxl py-sm animate-fade-in-up">
+            <section class="space-y-md">
+                <h1 class="font-display-sm text-display-sm text-textPrimary">API Support & Status</h1>
+                <p class="font-body-lg text-body-lg text-textSecondary">
+                    Monitor system operational status and inspect the data contracts powering the dashboard.
+                </p>
+            </section>
+
+            <!-- Status Indicator -->
+            <section class="bg-surface border border-success/20 rounded-xl p-lg flex items-center justify-between shadow-[0_4px_24px_rgba(34,197,94,0.06)]">
+                <div class="flex items-center gap-md">
+                    <div class="relative w-4 h-4">
+                        <span class="absolute inset-0 rounded-full bg-success opacity-40 animate-ping"></span>
+                        <span class="absolute inset-0 rounded-full bg-success"></span>
+                    </div>
+                    <div>
+                        <h3 class="font-h2 text-h2 text-textPrimary">All Systems Operational</h3>
+                        <p class="text-body-sm text-textSecondary">Verified at <span id="api-time" class="font-mono text-xs text-textMuted">--:--:--</span></p>
+                    </div>
+                </div>
+                <span class="font-label text-label text-success bg-success/10 px-3 py-1 rounded-full">100% UP</span>
+            </section>
+
+            <!-- Service Status Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div class="bg-surface border border-borderSubtle rounded-xl p-md flex justify-between items-center">
+                    <span class="font-body-md text-textPrimary">GitHub Event Fetcher</span>
+                    <span class="text-success text-body-sm font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span> Operational</span>
+                </div>
+                <div class="bg-surface border border-borderSubtle rounded-xl p-md flex justify-between items-center">
+                    <span class="font-body-md text-textPrimary">Linear Sync Daemon</span>
+                    <span class="text-success text-body-sm font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span> Operational</span>
+                </div>
+                <div class="bg-surface border border-borderSubtle rounded-xl p-md flex justify-between items-center">
+                    <span class="font-body-md text-textPrimary">Slack Webhook Router</span>
+                    <span class="text-success text-body-sm font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span> Operational</span>
+                </div>
+                <div class="bg-surface border border-borderSubtle rounded-xl p-md flex justify-between items-center">
+                    <span class="font-body-md text-textPrimary">Notion Cache Processor</span>
+                    <span class="text-success text-body-sm font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span> Operational</span>
+                </div>
+            </div>
+
+            <!-- API Endpoint Contract -->
+            <section class="bg-surface border border-borderSubtle rounded-xl p-lg space-y-md">
+                <h3 class="font-h2 text-h2 text-textPrimary">API Schema Contract</h3>
+                <p class="text-textSecondary font-body-md">
+                    Drift displays attention debt using a single contract served from the endpoint:
+                    <code class="bg-surfaceElevated px-1.5 py-0.5 rounded font-mono text-sm text-textPrimary">/drift_report.json</code>.
+                </p>
+                <pre class="bg-surfaceElevated text-xs font-mono text-textPrimary p-md rounded-lg border border-borderSubtle overflow-x-auto">{
+  "user": "agp",
+  "score": 68,
+  "score_delta": 4,
+  "generated_at": "2026-05-30T16:00:00Z",
+  "top_action": {
+    "type": "review",
+    "text": "PR #482 requires attention",
+    "url": "https://github.com/acme/backend/pull/482"
+  },
+  "debts": {
+    "review": [],
+    "reply": [],
+    "commitment": [],
+    "staleness": [],
+    "drift": []
+  }
+}</pre>
+            </section>
+        </div>
+
+        <!-- Support Page -->
+        <div id="support-content" class="hidden space-y-xxl py-sm animate-fade-in-up">
+            <section class="space-y-md">
+                <h1 class="font-display-sm text-display-sm text-textPrimary">Support</h1>
+                <p class="font-body-lg text-body-lg text-textSecondary">
+                    Have questions or encountered an issue? Submit a ticket directly to the Drift team.
+                </p>
+            </section>
+
+            <!-- Support form -->
+            <section class="bg-surface border border-borderSubtle rounded-xl p-lg max-w-xl mx-auto shadow-lg relative overflow-hidden">
+                <!-- Success State Overlay (Hidden initially) -->
+                <div id="support-success-overlay" class="absolute inset-0 bg-surfaceElevated/95 z-20 flex flex-col items-center justify-center gap-md opacity-0 pointer-events-none transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-success/20 border border-success/30 flex items-center justify-center text-success text-2xl animate-bounce">
+                        ✓
+                    </div>
+                    <h3 class="font-h2 text-h2 text-textPrimary text-center">Ticket Submitted Successfully!</h3>
+                    <p class="text-body-sm text-textSecondary text-center max-w-xs">
+                        Our engineering team is review-cycling your request. We'll ping you in Slack or email.
+                    </p>
+                    <button id="reset-support-btn" class="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded-md px-4 py-2 font-body-sm text-body-sm mt-md transition-colors">Submit Another Ticket</button>
+                </div>
+
+                <form id="support-form" class="space-y-md">
+                    <div class="space-y-1">
+                        <label class="font-label text-label text-textSecondary block">YOUR EMAIL</label>
+                        <input type="email" id="support-email" required placeholder="name@company.com" class="w-full bg-surfaceElevated border border-borderSubtle rounded-lg px-4 py-2.5 text-body-md text-textPrimary focus:outline-none focus:border-primary/50 transition-colors">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="font-label text-label text-textSecondary block">ISSUE CATEGORY</label>
+                        <select id="support-category" class="w-full bg-surfaceElevated border border-borderSubtle rounded-lg px-4 py-2.5 text-body-md text-textPrimary focus:outline-none focus:border-primary/50 transition-colors">
+                            <option value="integration">Integration Hook Failure</option>
+                            <option value="sync">Sync Daemon Stagnation</option>
+                            <option value="ui">Dashboard Glitch / Layout</option>
+                            <option value="other">Other / Feature Request</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="font-label text-label text-textSecondary block">DESCRIPTION</label>
+                        <textarea id="support-message" required rows="4" placeholder="Describe what went wrong or what you'd like to see..." class="w-full bg-surfaceElevated border border-borderSubtle rounded-lg px-4 py-2.5 text-body-md text-textPrimary focus:outline-none focus:border-primary/50 transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-on-primary-container py-3 rounded-lg font-body-md text-body-md font-bold shadow-md transition-all duration-200 transform active:scale-[0.98]">
+                        Submit Support Ticket
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Privacy Page -->
+        <div id="privacy-content" class="hidden space-y-xxl py-sm animate-fade-in-up">
+            <section class="space-y-md">
+                <h1 class="font-display-sm text-display-sm text-textPrimary">Privacy</h1>
+                <p class="font-body-lg text-body-lg text-textSecondary">
+                    Learn how Drift and Coral protect your proprietary codebase and communication metadata.
+                </p>
+            </section>
+
+            <div class="space-y-lg max-w-3xl mx-auto">
+                <section class="bg-surface border border-primary/20 rounded-xl p-lg relative overflow-hidden shadow-[0_4px_24px_rgba(13,148,136,0.04)]">
+                    <div class="absolute inset-0 bg-primary/[0.01] pointer-events-none"></div>
+                    <div class="relative z-10 space-y-sm">
+                        <h3 class="font-h2 text-h2 text-primary flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">shield</span>
+                            Local-First Security Architecture
+                        </h3>
+                        <p class="text-textPrimary font-body-lg leading-relaxed">
+                            Unlike traditional SaaS analytics platforms, **Drift is built on a local-first design pattern**. The Coral sync engine runs completely on your local workstation or private virtual server environment.
+                        </p>
+                        <ul class="space-y-2 text-body-sm text-textSecondary pl-4 list-disc">
+                            <li><strong>Zero Cloud Relays</strong>: Raw Slack messages, Linear task details, and GitHub code changes never pass through third-party servers.</li>
+                            <li><strong>Local Storage Only</strong>: The compiled context report `drift_report.json` remains entirely in your local storage directory.</li>
+                            <li><strong>No Telemetry</strong>: Drift does not track usage patterns, click maps, or dashboard configurations.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="bg-surface border border-borderSubtle rounded-xl p-lg space-y-md">
+                    <h3 class="font-h2 text-h2 text-textPrimary">API Data Isolation</h3>
+                    <p class="text-textSecondary font-body-md leading-relaxed">
+                        To interface with developer APIs, Drift uses standard OAuth2 or personal access token integrations. All credentials remain encrypted in your local `.env` configuration file, loaded into temporary environment memory at runtime, and are never serialized or transmitted.
+                    </p>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-transparent text-textMuted dark:text-textMuted font-caption text-caption full-width py-section border-t border-borderSubtle relative z-10 mt-xl">
+        <div class="max-w-[960px] mx-auto px-lg flex flex-col md:flex-row justify-between items-center gap-md">
+            <span class="font-h3 text-h3 text-on-surface">Drift</span>
+            <div class="flex gap-md">
+                <a id="footer-documentation" class="text-textMuted hover:text-primary transition-colors cursor-pointer">Documentation</a>
+                <a id="footer-api" class="text-textMuted hover:text-primary transition-colors cursor-pointer">API Support</a>
+                <a id="footer-support" class="text-textMuted hover:text-primary transition-colors cursor-pointer">Support</a>
+                <a id="footer-privacy" class="text-textMuted hover:text-primary transition-colors cursor-pointer">Privacy</a>
+            </div>
+            <span class="text-right">Powered by Coral · github + linear + slack + notion</span>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const spotlight = document.getElementById('mouse-spotlight');
+            if(spotlight) {
+                spotlight.style.setProperty('--mouse-x', `${e.clientX}px`);
+                spotlight.style.setProperty('--mouse-y', `${e.clientY}px`);
+            }
+        });
+    </script>
 </body>
 </html>

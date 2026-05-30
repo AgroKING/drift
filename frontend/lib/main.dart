@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'theme/app_theme.dart';
-import 'package:drift/views/demo_view.dart';
+import 'package:drift/views/home_view.dart';
 
 void main() {
   runApp(const DriftApp());
@@ -15,8 +15,8 @@ class DriftApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Drift',
-      theme: AppTheme.light,
-      home: const DemoView(),
+      theme: AppTheme.dark,
+      home: const HomeView(),
     );
   }
 }

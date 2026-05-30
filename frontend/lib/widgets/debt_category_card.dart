@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:url_launcher/url_launcher.dart';
 
-import '../models/drift_report.dart';
+import 'package:drift/models/drift_report.dart';
+import 'package:drift/theme/app_theme.dart';
 
 class DebtCategoryCard extends StatelessWidget {
   final String emoji;
@@ -20,44 +20,45 @@ class DebtCategoryCard extends StatelessWidget {
     required this.children,
   });
 
-  static const Color _surface = Color(0xFFFFFFFF);
-  static const Color _border = Color(0xFFE2E8F0);
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
-
   @override
   Widget build(BuildContext context) {
-    // Label for the number of items in this category.
     final String countLabel = itemCount == 1 ? '1 item' : '$itemCount items';
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _border),
-        color: _surface,
-        boxShadow: const <BoxShadow>[
+        border: Border.all(color: AppTheme.border),
+        color: AppTheme.surface,
+        boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Color(0x120F172A),
-            blurRadius: 22,
-            offset: Offset(0, 10),
+            color: accentColor.withValues(alpha: 0.10),
+            blurRadius: 32,
+            offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: accentColor.withValues(alpha: 0.06),
+            blurRadius: 72,
+            offset: const Offset(0, 26),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
               child: Container(
                 width: 4,
                 decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.9),
+                  color: accentColor,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -65,36 +66,39 @@ class DebtCategoryCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         emoji,
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: _textPrimary,
-                        ),
+                        style: const TextStyle(fontSize: 20),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           label,
                           style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: _textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            height: 1.3,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                       ),
-                      Text(
-                        countLabel,
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: _textSecondary,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceElevated,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppTheme.borderSubtle),
+                        ),
+                        child: Text(
+                          countLabel,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: AppTheme.textSecondary,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  // Show an empty placeholder when there are no items,
-                  // otherwise render the list of item widgets.
+                  const SizedBox(height: 24),
                   if (itemCount == 0)
                     _EmptyState(accentColor: accentColor)
                   else
@@ -117,16 +121,13 @@ class _EmptyState extends StatelessWidget {
 
   const _EmptyState({required this.accentColor});
 
-  static const Color _textPrimary = Color(0xFFF1F5F9);
-  static const Color _textSecondary = Color(0xFF64748B);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        color: AppTheme.surfaceElevated,
         border: Border.all(
           color: accentColor.withValues(alpha: 0.16),
         ),
@@ -134,24 +135,16 @@ class _EmptyState extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '✅',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              height: 1.2,
-              fontWeight: FontWeight.w700,
-              color: _textPrimary,
-            ),
-          ),
-          const SizedBox(width: 10),
+          const Text('✅', style: TextStyle(fontSize: 16)),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               "You're caught up — no items waiting for you",
               style: GoogleFonts.inter(
                 fontSize: 14,
-                height: 1.35,
-                fontWeight: FontWeight.w600,
-                color: _textSecondary,
+                fontWeight: FontWeight.w500,
+                height: 1.45,
+                color: AppTheme.textSecondary,
               ),
             ),
           ),
@@ -170,25 +163,20 @@ class _ItemsContainer extends StatelessWidget {
     required this.children,
   });
 
-  static const Color _border = Color(0xFFE2E8F0);
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _border),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.border),
+        color: AppTheme.surfaceElevated,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           for (int i = 0; i < children.length; i++) ...<Widget>[
-            // Insert a divider between items (but not before the first one).
             if (i > 0) const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: children[i],
-            ),
+            children[i],
           ],
         ],
       ),
@@ -196,7 +184,7 @@ class _ItemsContainer extends StatelessWidget {
   }
 }
 
-class ReviewDebtRow extends StatelessWidget {
+class ReviewDebtRow extends StatefulWidget {
   final ReviewDebt debt;
   final VoidCallback? onOpen;
 
@@ -206,44 +194,82 @@ class ReviewDebtRow extends StatelessWidget {
     this.onOpen,
   });
 
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
+  @override
+  State<ReviewDebtRow> createState() => _ReviewDebtRowState();
+}
+
+class _ReviewDebtRowState extends State<ReviewDebtRow> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    // Optional block count displayed after the main metadata (if present).
-    final String blocks = debt.blocks == null ? '' : ' · ⛓ ${debt.blocks}';
+    final String blocks = widget.debt.blocks == null ? '' : ' · ⛓ ${widget.debt.blocks}';
 
-    return GestureDetector(
-      onTap: onOpen,
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'PR #${debt.prNumber} · "${debt.title}" · @${debt.author}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: _textPrimary,
-            ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: widget.onOpen,
+        borderRadius: BorderRadius.circular(16),
+        hoverColor: AppTheme.surfaceOverlay,
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(
+            left: _isHovered ? 22.0 : 16.0,
+            right: _isHovered ? 10.0 : 16.0,
+            top: 16,
+            bottom: 16,
           ),
-          const SizedBox(height: 6),
-          Text(
-            '${debt.repo} · ⏱ ${debt.daysWaiting} days · 💬 ${debt.slackMentions} Slack asks$blocks',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        height: 1.35,
+                        color: _isHovered ? AppTheme.accent : AppTheme.textPrimary,
+                      ),
+                      child: Text(
+                        'PR #${widget.debt.prNumber} · "${widget.debt.title}" · @${widget.debt.author}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${widget.debt.repo} · ⏱ ${widget.debt.daysWaiting} days · 💬 ${widget.debt.slackMentions} Slack asks$blocks',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (widget.debt.url != null && widget.debt.url!.isNotEmpty)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  transform: Matrix4.translationValues(_isHovered ? 4.0 : 0.0, _isHovered ? -4.0 : 0.0, 0.0),
+                  child: Icon(
+                    Icons.open_in_new,
+                    size: 14,
+                    color: _isHovered ? AppTheme.accent : AppTheme.textMuted,
+                  ),
+                ),
+            ],
           ),
-        ],
-        )
+        ),
+      ),
     );
   }
 }
@@ -255,9 +281,6 @@ class ReplyDebtRow extends StatelessWidget {
     super.key,
     required this.debt,
   });
-
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
 
   String _sourceLabel(String source) {
     switch (source.toLowerCase()) {
@@ -303,19 +326,20 @@ class ReplyDebtRow extends StatelessWidget {
         ? '#${debt.channel.replaceAll('#', '')}'
         : debt.channel;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             '$icon $label $channelLabel · @${debt.from} · ${_agoLabel(debt.daysAgo)}',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: _textPrimary,
+              height: 1.35,
+              color: AppTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -325,13 +349,13 @@ class ReplyDebtRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontSize: 13,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+              color: AppTheme.textSecondary,
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }
@@ -344,26 +368,24 @@ class CommitmentDebtRow extends StatelessWidget {
     required this.debt,
   });
 
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
-
   @override
   Widget build(BuildContext context) {
     final bool showWarning = debt.daysStale >= 10;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             '${debt.taskId} · "${debt.title}"',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: _textPrimary,
+              height: 1.35,
+              color: AppTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -373,9 +395,9 @@ class CommitmentDebtRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontSize: 13,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+              color: AppTheme.textSecondary,
             ),
           ),
           if (showWarning) ...<Widget>[
@@ -386,19 +408,18 @@ class CommitmentDebtRow extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
                 fontSize: 13,
-                height: 1.25,
-                fontWeight: FontWeight.w700,
-                color: _textSecondary,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.warning,
               ),
             ),
           ],
         ],
-      )
+      ),
     );
   }
 }
 
-class StalenessDebtRow extends StatelessWidget {
+class StalenessDebtRow extends StatefulWidget {
   final StalenessDebt debt;
   final VoidCallback? onOpen;
 
@@ -408,57 +429,95 @@ class StalenessDebtRow extends StatelessWidget {
     this.onOpen,
   });
 
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
+  @override
+  State<StalenessDebtRow> createState() => _StalenessDebtRowState();
+}
+
+class _StalenessDebtRowState extends State<StalenessDebtRow> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final bool nobodyLooking = debt.reviews == 0;
+    final bool nobodyLooking = widget.debt.reviews == 0;
 
-    return GestureDetector(
-      onTap: onOpen,
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'PR #${debt.prNumber} · "${debt.title}" · ${debt.repo}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: _textPrimary,
-            ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: widget.onOpen,
+        borderRadius: BorderRadius.circular(16),
+        hoverColor: AppTheme.surfaceOverlay,
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(
+            left: _isHovered ? 22.0 : 16.0,
+            right: _isHovered ? 10.0 : 16.0,
+            top: 16,
+            bottom: 16,
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Open ${debt.daysStale} days · ${debt.reviews} reviews',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
-            ),
-          ),
-          if (nobodyLooking) ...<Widget>[
-            const SizedBox(height: 6),
-            Text(
-              "💡 Nobody's looking at it. Ping #frontend?",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                height: 1.25,
-                fontWeight: FontWeight.w700,
-                color: _textSecondary,
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        height: 1.35,
+                        color: _isHovered ? AppTheme.accent : AppTheme.textPrimary,
+                      ),
+                      child: Text(
+                        'PR #${widget.debt.prNumber} · "${widget.debt.title}" · ${widget.debt.repo}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Open ${widget.debt.daysStale} days · ${widget.debt.reviews} reviews',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    if (nobodyLooking) ...<Widget>[
+                      const SizedBox(height: 6),
+                      Text(
+                        "💡 Nobody's looking at it. Ping #frontend?",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textMuted,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ],
-      )
+              if (widget.debt.url != null && widget.debt.url!.isNotEmpty)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  transform: Matrix4.translationValues(_isHovered ? 4.0 : 0.0, _isHovered ? -4.0 : 0.0, 0.0),
+                  child: Icon(
+                    Icons.open_in_new,
+                    size: 14,
+                    color: _isHovered ? AppTheme.accent : AppTheme.textMuted,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -471,25 +530,22 @@ class DriftDebtRow extends StatelessWidget {
     required this.debt,
   });
 
-  static const Color _textPrimary = Color(0xFF0F172A);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _driftAccent = Color(0xFFA855F7);
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             '${debt.taskId} "${debt.taskTitle}" → marked ${debt.taskStatus}',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: _textPrimary,
+              height: 1.35,
+              color: AppTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -499,42 +555,38 @@ class DriftDebtRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontSize: 13,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+              color: AppTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 '⚠️',
                 style: GoogleFonts.inter(
                   fontSize: 13,
-                  height: 1.25,
-                  fontWeight: FontWeight.w800,
-                  color: _driftAccent,
+                  color: AppTheme.drift,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   debt.contradiction,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    height: 1.25,
-                    fontWeight: FontWeight.w800,
-                    color: _driftAccent.withValues(alpha: 0.95),
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                    color: AppTheme.drift,
                   ),
                 ),
               ),
             ],
           ),
         ],
-      )
+      ),
     );
   }
 }

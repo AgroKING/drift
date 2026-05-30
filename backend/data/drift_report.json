@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-30T05:48:21Z",
+  "generated_at": "2026-05-30T10:37:00Z",
   "user": "A G P",
-  "score": 100,
-  "score_delta": 0,
+  "score": 60,
+  "score_delta": -40,
   "top_action": {
-    "text": "Reply to ZansSux in C0B616280CF: hey can someone review PR #3? been open since Monday",
+    "text": "Reply to ZansSux in C0B616280CF: ENG-02 dashboard crash still happening in prod, anyone looked at it?",
     "type": "reply",
     "url": ""
   },
@@ -15,75 +15,33 @@
         "source": "slack",
         "channel": "C0B616280CF",
         "from": "ZansSux",
-        "days_ago": 732,
-        "preview": "hey can someone review PR #3? been open since Monday"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 732,
-        "preview": "PR #3 is still sitting unreviewed, anyone free?"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 732,
-        "preview": "blocked on the auth module, waiting for design feedback from the team"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 732,
+        "days_ago": 365,
         "preview": "ENG-02 dashboard crash still happening in prod, anyone looked at it?"
       },
       {
         "source": "slack",
         "channel": "C0B616280CF",
         "from": "ZansSux",
-        "days_ago": 731,
+        "days_ago": 365,
         "preview": "can someone approve the deploy? I pushed a fix for ENG-02 this morning"
       },
       {
         "source": "slack",
         "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 731,
-        "preview": "drift score algo PR is up — ENG-06, needs review before we merge"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
         "from": "teammate2",
-        "days_ago": 731,
+        "days_ago": 364,
         "preview": "heads up: CI is failing on main, don't merge anything yet"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 731,
-        "preview": "ENG-04 tests are written, created a PR for review"
-      },
-      {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "teammate2",
-        "days_ago": 731,
-        "preview": "anyone written docs yet? ENG-03 is still in Todo"
       }
     ],
     "commitment": [],
     "staleness": [],
     "drift": []
   },
-  "insight": "The developer has a critical backlog of unanswered messages (9 items), with the most urgent being a 2-year-old request to review PR #3 from @ZansSux, causing significant blocking and frustration.",
+  "insight": "High attention debt primarily due to unaddressed critical messages from over a year ago, including a production issue (ENG-02) and a blocked deploy, alongside a CI failure alert that may still be relevant.",
   "suggested_plan": [
-    "Immediately reply to @ZansSux in Slack channel C0B616280CF to acknowledge the PR #3 review request, provide a timeline for review, or redirect to another reviewer if unavailable.",
-    "Review PR #3 today and either approve/merge it or provide actionable feedback to unblock @ZansSux.",
-    "Triage the remaining 8 unanswered messages in Slack, prioritizing those from 732 days ago (e.g., auth module design feedback) to address long-standing blockers.",
-    "Set up a recurring 15-minute daily slot to clear new message debt and prevent future accumulation."
+    "Immediately reply to @ZansSux in Slack channel C0B616280CF to confirm status of ENG-02 (dashboard crash) and whether the fix deployed or needs further action.",
+    "Check if the CI failure on main (flagged by @teammate2) was resolved; if not, triage or escalate to the team in C0B616280CF.",
+    "Follow up with @ZansSux in C0B616280CF to verify if the deploy approval for ENG-02 is still needed or if the issue is resolved.",
+    "Set a reminder to review and clear Slack messages weekly to prevent future attention debt buildup."
   ]
 }

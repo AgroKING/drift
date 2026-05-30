@@ -5,6 +5,8 @@ class DriftReport {
   final int scoreDelta;
   final TopAction topAction;
   final Debts debts;
+  final String? insight;
+  final List<String> suggestedPlan;
 
   DriftReport({
     required this.generatedAt,
@@ -13,6 +15,8 @@ class DriftReport {
     required this.scoreDelta,
     required this.topAction,
     required this.debts,
+    this.insight,
+    required this.suggestedPlan,
   });
 
   factory DriftReport.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,10 @@ class DriftReport {
       scoreDelta: json['score_delta'],
       topAction: TopAction.fromJson(json['top_action']),
       debts: Debts.fromJson(json['debts']),
+      insight: json['insight'],
+      suggestedPlan: json['suggested_plan'] != null
+          ? List<String>.from(json['suggested_plan'])
+          : [],
     );
   }
 }
@@ -30,16 +38,12 @@ class DriftReport {
 class TopAction {
   final String text;
   final String type;
-  final String url;
+  final String? url;
 
-  TopAction({required this.text, required this.type, required this.url});
+  TopAction({required this.text, required this.type, this.url});
 
   factory TopAction.fromJson(Map<String, dynamic> json) {
-    return TopAction(
-      text: json['text'],
-      type: json['type'],
-      url: json['url'],
-    );
+    return TopAction(text: json['text'], type: json['type'], url: json['url']);
   }
 }
 
@@ -60,10 +64,16 @@ class Debts {
 
   factory Debts.fromJson(Map<String, dynamic> json) {
     return Debts(
-      review: (json['review'] as List).map((e) => ReviewDebt.fromJson(e)).toList(),
+      review: (json['review'] as List)
+          .map((e) => ReviewDebt.fromJson(e))
+          .toList(),
       reply: (json['reply'] as List).map((e) => ReplyDebt.fromJson(e)).toList(),
-      commitment: (json['commitment'] as List).map((e) => CommitmentDebt.fromJson(e)).toList(),
-      staleness: (json['staleness'] as List).map((e) => StalenessDebt.fromJson(e)).toList(),
+      commitment: (json['commitment'] as List)
+          .map((e) => CommitmentDebt.fromJson(e))
+          .toList(),
+      staleness: (json['staleness'] as List)
+          .map((e) => StalenessDebt.fromJson(e))
+          .toList(),
       drift: (json['drift'] as List).map((e) => DriftDebt.fromJson(e)).toList(),
     );
   }
@@ -77,7 +87,7 @@ class ReviewDebt {
   final int daysWaiting;
   final int slackMentions;
   final String? blocks;
-  final String url;
+  final String? url;
 
   ReviewDebt({
     required this.prNumber,
@@ -87,7 +97,7 @@ class ReviewDebt {
     required this.daysWaiting,
     required this.slackMentions,
     this.blocks,
-    required this.url,
+    this.url,
   });
 
   factory ReviewDebt.fromJson(Map<String, dynamic> json) {
@@ -135,14 +145,14 @@ class CommitmentDebt {
   final String title;
   final String status;
   final int daysStale;
-  final DateTime lastCommitDate;
+  final DateTime? lastCommitDate;
 
   CommitmentDebt({
     required this.taskId,
     required this.title,
     required this.status,
     required this.daysStale,
-    required this.lastCommitDate,
+    this.lastCommitDate,
   });
 
   factory CommitmentDebt.fromJson(Map<String, dynamic> json) {
@@ -151,7 +161,9 @@ class CommitmentDebt {
       title: json['title'],
       status: json['status'],
       daysStale: json['days_stale'],
-      lastCommitDate: DateTime.parse(json['last_commit_date']),
+      lastCommitDate: json['last_commit_date'] != null
+          ? DateTime.parse(json['last_commit_date'])
+          : null,
     );
   }
 }
@@ -162,7 +174,7 @@ class StalenessDebt {
   final String repo;
   final int daysStale;
   final int reviews;
-  final String url;
+  final String? url;
 
   StalenessDebt({
     required this.prNumber,
@@ -170,7 +182,7 @@ class StalenessDebt {
     required this.repo,
     required this.daysStale,
     required this.reviews,
-    required this.url,
+    this.url,
   });
 
   factory StalenessDebt.fromJson(Map<String, dynamic> json) {
