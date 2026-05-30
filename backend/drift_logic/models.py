@@ -1,19 +1,13 @@
-"""
-Uses Pydantic v2 for validation and serialisation. Every model validates
-incoming data at construction time so Person 3 gets a clear error when raw
-query rows are malformed.
-"""
+"""Drift report Pydantic v2 schemas and validation models."""
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, List, Literal, Mapping, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
-# ---------------------------------------------------------------------------
 # Helpers
-# ---------------------------------------------------------------------------
 
 ACTION_TYPES = Literal["review", "reply", "commitment", "staleness", "drift", "none"]
 
@@ -28,9 +22,7 @@ def utc_now_iso() -> str:
     )
 
 
-# ---------------------------------------------------------------------------
 # Debt items
-# ---------------------------------------------------------------------------
 
 
 class TopAction(BaseModel):
@@ -38,11 +30,16 @@ class TopAction(BaseModel):
 
     text: str = Field(..., min_length=1)
     type: ACTION_TYPES
-    url: Optional[str] = None
+    url: str = ""
 
     @classmethod
     def none(cls) -> "TopAction":
-        return cls(text="No urgent drift action right now.", type="none", url=None)
+        return cls(text="No urgent drift action right now.", type="none", url="")
+
+    @field_validator("url", mode="before")
+    @classmethod
+    def empty_string_for_none(cls, v: Any) -> str:
+        return "" if v is None else v
 
 
 class ReviewDebt(BaseModel):
@@ -55,7 +52,7 @@ class ReviewDebt(BaseModel):
     days_waiting: int = Field(..., ge=0)
     slack_mentions: int = Field(default=0, ge=0)
     blocks: Optional[str] = None
-    url: Optional[str] = None
+    url: str = ""
 
     @classmethod
     def from_row(cls, row: Mapping[str, Any]) -> "ReviewDebt":
@@ -65,10 +62,15 @@ class ReviewDebt(BaseModel):
             author=row["author"],
             repo=row["repo"],
             days_waiting=row["days_waiting"],
-            slack_mentions=row["slack_mentions"],
-            blocks=row["blocks"],
-            url=row["url"],
+            slack_mentions=row.get("slack_mentions", 0),
+            blocks=row.get("blocks"),
+            url=row.get("url") or "",
         )
+
+    @field_validator("url", mode="before")
+    @classmethod
+    def empty_string_for_none(cls, v: Any) -> str:
+        return "" if v is None else v
 
 
 class ReplyDebt(BaseModel):
@@ -106,7 +108,7 @@ class CommitmentDebt(BaseModel):
     title: str = Field(..., min_length=1)
     status: str = Field(..., min_length=1)
     days_stale: int = Field(..., ge=0)
-    last_commit_date: Optional[str] = None
+    last_commit_date: str = Field(default_factory=utc_now_iso)
 
     @classmethod
     def from_row(cls, row: Mapping[str, Any]) -> "CommitmentDebt":
@@ -115,8 +117,13 @@ class CommitmentDebt(BaseModel):
             title=row["title"],
             status=row["status"],
             days_stale=row["days_stale"],
-            last_commit_date=row["last_commit_date"],
+            last_commit_date=row.get("last_commit_date") or utc_now_iso(),
         )
+
+    @field_validator("last_commit_date", mode="before")
+    @classmethod
+    def check_last_commit_date(cls, v: Any) -> str:
+        return utc_now_iso() if v is None else v
 
 
 class StalenessDebt(BaseModel):
@@ -127,7 +134,7 @@ class StalenessDebt(BaseModel):
     repo: str = Field(..., min_length=1)
     days_stale: int = Field(..., ge=0)
     reviews: int = Field(default=0, ge=0)
-    url: Optional[str] = None
+    url: str = ""
 
     @classmethod
     def from_row(cls, row: Mapping[str, Any]) -> "StalenessDebt":
@@ -136,9 +143,14 @@ class StalenessDebt(BaseModel):
             title=row["title"],
             repo=row["repo"],
             days_stale=row["days_stale"],
-            reviews=row["reviews"],
-            url=row["url"],
+            reviews=row.get("reviews", 0),
+            url=row.get("url") or "",
         )
+
+    @field_validator("url", mode="before")
+    @classmethod
+    def empty_string_for_none(cls, v: Any) -> str:
+        return "" if v is None else v
 
 
 class DriftDebt(BaseModel):
@@ -163,9 +175,7 @@ class DriftDebt(BaseModel):
         )
 
 
-# ---------------------------------------------------------------------------
 # Aggregates
-# ---------------------------------------------------------------------------
 
 
 class DebtBuckets(BaseModel):
@@ -196,6 +206,8 @@ class DriftReport(BaseModel):
     score_delta: int
     top_action: TopAction
     debts: DebtBuckets
+    insight: Optional[str] = None
+    suggested_plan: Optional[List[str]] = Field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -205,4 +217,6 @@ class DriftReport(BaseModel):
             "score_delta": self.score_delta,
             "top_action": self.top_action.model_dump(),
             "debts": self.debts.to_dict(),
+            "insight": self.insight,
+            "suggested_plan": self.suggested_plan,
         }
