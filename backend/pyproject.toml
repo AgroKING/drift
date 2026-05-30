@@ -5,3 +5,6 @@ description = "This is the backend for the project"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["mcp", "pydantic>=2", "openai", "httpx", "python-dotenv"]
+
+[project.scripts]
+drift_agent = "drift_agent.main:main"
