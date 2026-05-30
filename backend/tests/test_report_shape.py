@@ -1,5 +1,3 @@
-"""Tests for the DriftReport shape and serialisation contract."""
-
 import sys
 from pathlib import Path
 
@@ -18,7 +16,6 @@ from drift_logic.report import build_drift_report
 
 
 def test_report_shape_matches_frontend_contract():
-    """The to_dict() output must contain exactly the keys the frontend expects."""
     report = build_drift_report(
         user="agp",
         generated_at="2026-05-25T10:15:00Z",
@@ -52,11 +49,16 @@ def test_report_shape_matches_frontend_contract():
     assert isinstance(payload["score"], int)
     assert isinstance(payload["score_delta"], int)
     assert set(payload["top_action"]) == {"text", "type", "url"}
-    assert set(payload["debts"]) == {"review", "reply", "commitment", "staleness", "drift"}
+    assert set(payload["debts"]) == {
+        "review",
+        "reply",
+        "commitment",
+        "staleness",
+        "drift",
+    }
 
 
 def test_reply_debt_serialises_sender_as_from():
-    """The frontend expects the key ``from``, not ``from_user``."""
     report = build_drift_report(
         user="agp",
         generated_at="2026-05-25T10:15:00Z",
@@ -77,7 +79,6 @@ def test_reply_debt_serialises_sender_as_from():
 
 
 def test_empty_report_has_no_action_and_zero_score():
-    """An empty report should score 0 and have top_action.type 'none'."""
     payload = build_drift_report(
         user="agp", generated_at="2026-05-25T10:15:00Z"
     ).to_dict()
@@ -88,14 +89,11 @@ def test_empty_report_has_no_action_and_zero_score():
 
 
 def test_invalid_rows_fail_pydantic_validation():
-    """Rows with missing required fields or negative numbers must raise."""
-    # Missing required 'title'
     with pytest.raises(Exception):
         ReviewDebt.from_row(
             {"pr_number": 1, "title": "", "author": "a", "repo": "r", "days_waiting": 1}
         )
 
-    # Negative days_waiting
     with pytest.raises(Exception):
         ReviewDebt.from_row(
             {
@@ -164,6 +162,5 @@ def test_invalid_rows_fail_pydantic_validation():
     ],
 )
 def test_missing_required_row_fields_fail(model, row):
-    """Required query fields should not be silently defaulted."""
     with pytest.raises(KeyError):
         model.from_row(row)

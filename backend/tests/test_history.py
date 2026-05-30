@@ -41,7 +41,9 @@ def test_score_delta_uses_latest_matching_user(tmp_path):
     """Delta should be current − latest score for the *same* user, ignoring others."""
     path = tmp_path / "score_history.jsonl"
 
-    append_score(path, generated_at="2026-05-24T10:00:00Z", user="someone-else", score=99)
+    append_score(
+        path, generated_at="2026-05-24T10:00:00Z", user="someone-else", score=99
+    )
     append_score(path, generated_at="2026-05-24T10:00:00Z", user="agp", score=35)
 
     assert calculate_score_delta(path, "agp", 47) == 12
