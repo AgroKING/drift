@@ -1,8 +1,4 @@
-"""
-History is stored as JSONL — one JSON object per line:
-
-    {"generated_at":"2026-05-24T10:00:00Z","user":"agp","score":35}
-"""
+"""Track Attention Debt Score history inside a local JSONL file."""
 
 from __future__ import annotations
 
@@ -47,9 +43,7 @@ def calculate_score_delta(path: str | Path, user: str, current_score: int) -> in
     return current_score - last_score
 
 
-def append_score(
-    path: str | Path, *, generated_at: str, user: str, score: int
-) -> None:
+def append_score(path: str | Path, *, generated_at: str, user: str, score: int) -> None:
     """Append a single history row to the JSONL file (creates parents if needed)."""
     history_path = Path(path)
     history_path.parent.mkdir(parents=True, exist_ok=True)
