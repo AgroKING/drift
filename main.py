@@ -1,6 +1,6 @@
+"""Drift — Developer Attention Debt Tracker."""
 
+from backend.drift_agent.main import main
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    main()
