@@ -46,50 +46,44 @@ To remain efficient, Drift makes exactly **one** LLM request per scan.
 
 ## Getting Started
 
-### Backend Setup
+### 1. Configure Environment
+Create a `backend/.env` file in the `backend/` directory:
+```env
+MISTRAL_API_KEY=your_api_key
+LINEAR_API_KEY=your_linear_api_key
+NOTION_API_KEY=your_notion_api_key
 
-1. **Configure Environment:**
-   Create a `backend/.env` file with your details:
-   ```env
-   MISTRAL_API_KEY=your_api_key
-   MISTRAL_BASE_URL=https://api.mistral.ai/v1
-   MISTRAL_MODEL=mistral-large-latest
-   DRIFT_GITHUB_USERNAME=your_username
-   DRIFT_USER_NAME=your_display_name
-   GITHUB_OWNER=repo_owner
-   GITHUB_REPO=repo_name
-   ```
+# Target Repository Details
+GITHUB_OWNER=repo_owner
+GITHUB_REPO=repo_name
 
-2. **Run a Scan:**
-   You can run a scan in mock mode (using packaged developer rows) or live mode:
-   ```bash
-   cd backend
-   # Mock mode
-   uv run drift_agent scan --mock
-   
-   # Live mode (requires active Coral MCP server)
-   uv run drift_agent scan --live
-   ```
-   This generates a JSON report at `backend/data/drift_report.json`.
+# Developer Profiles
+DRIFT_USER_NAME="Your Display Name"
+DRIFT_GITHUB_USERNAME=your_github_username
+DRIFT_LINEAR_NAME="Your Linear Display Name"
+```
 
-3. **Start the Report Server:**
-   Start a simple HTTP server on port 8080 to serve the report to the frontend:
-   ```bash
-   cd backend/data
-   python3 -m http.server 8080
-   ```
+### 2. Configure Coral Sources
+Ensure your native APIs are connected to Coral beforehand by running:
+```bash
+# Register Linear credentials
+LINEAR_API_KEY="your_linear_api_key" coral source add linear
 
-### Frontend Setup
+# Register Notion credentials
+NOTION_API_KEY="your_notion_api_key" coral source add notion
+```
 
-Drift's frontend is a high-performance, web-native dashboard (pure HTML5 + Tailwind CSS + Vanilla JS) served directly from `frontend/web/`. There is no compilation or build overhead.
+### 3. Run Everything
+We provide a unified orchestrator script that automatically performs the backend scan, starts the CORS report server (port 8080), and hosts the frontend dashboard (port 8081) in one command:
+```bash
+./start.sh
+```
 
-1. **Run the Frontend Server:**
-   Start the local frontend server:
-   ```bash
-   ./scripts/run_frontend.sh
-   ```
-   This hosts the dashboard at `http://localhost:8081`.
+Once running, you can access:
+* 🖥️ **Dashboard:** [http://localhost:8081](http://localhost:8081)
+* 📡 **Live Report JSON:** [http://localhost:8080/drift_report.json](http://localhost:8080/drift_report.json)
 
-2. **Toggle Modes:**
-   - **MOCK Mode (Default):** Loads static, structured data from `assets/mock_drift_report.json`.
-   - **LIVE Mode:** Make sure you are running the backend scan and the CORS server via `./scripts/serve_report.sh`. Then, toggle the button in the top-right navbar to **LIVE** to fetch and render real-time attention debt data.
+Toggle the dashboard in the top-right corner to **LIVE MODE** to fetch and render the live attention debt data.
+
+Press `Ctrl+C` in your terminal to cleanly stop all running servers.
+

@@ -1,20 +1,97 @@
 {
-  "generated_at": "2026-05-25T10:15:00Z",
-  "user": "agp",
-  "score": 47,
-  "score_delta": 12,
+  "generated_at": "2026-05-31T15:32:44Z",
+  "user": "A G P",
+  "score": 20,
+  "score_delta": 0,
   "top_action": {
-    "text": "Review PR #482",
-    "type": "review",
-    "url": "https://github.com/acme/backend/pull/482"
+    "text": "Update ENG-6: Design drift score algorithm has been stale for 1 days.",
+    "type": "commitment",
+    "url": ""
   },
   "debts": {
     "review": [],
-    "reply": [],
-    "commitment": [],
+    "reply": [
+      {
+        "source": "notion",
+        "channel": "Onboarding Guide",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Sprint Planning May",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Drift Product Spec",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "API Design Doc",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Scoring Algorithm Notes",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      }
+    ],
+    "commitment": [
+      {
+        "task_id": "ENG-6",
+        "title": "Design drift score algorithm",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:32:44Z"
+      },
+      {
+        "task_id": "ENG-5",
+        "title": "Set up CI/CD pipeline",
+        "status": "Todo",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:32:44Z"
+      },
+      {
+        "task_id": "ENG-3",
+        "title": "Write API documentation",
+        "status": "Todo",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:32:44Z"
+      },
+      {
+        "task_id": "ENG-2",
+        "title": "Fix dashboard crash on load",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:32:44Z"
+      },
+      {
+        "task_id": "ENG-1",
+        "title": "Implement auth flow",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:32:44Z"
+      }
+    ],
     "staleness": [],
     "drift": []
   },
-  "insight": null,
-  "suggested_plan": []
+  "insight": "AGP has moderate attention debt, primarily due to stale tasks and unaddressed messages. Key themes include delayed reviews of Notion documents and stalled progress on critical tasks like the drift score algorithm design.",
+  "suggested_plan": [
+    "Immediately address the stale task ENG-6 'Design drift score algorithm' by either updating its status, breaking it into smaller subtasks, or scheduling time to complete it today.",
+    "Review and respond to the 3 Notion document updates from @Teammate (Onboarding Guide, Sprint Planning May, Drift Product Spec) to unblock collaboration.",
+    "Prioritize ENG-5 'Set up CI/CD pipeline' or ENG-3 'Write API documentation' by assigning a deadline or delegating if time is constrained.",
+    "Schedule a 30-minute block to triage all stale tasks and messages to prevent further accumulation of attention debt."
+  ]
 }

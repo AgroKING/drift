@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-31T15:31:31Z",
+  "generated_at": "2026-05-31T15:32:44Z",
   "user": "A G P",
   "score": 20,
-  "score_delta": 10,
+  "score_delta": 0,
   "top_action": {
     "text": "Update ENG-6: Design drift score algorithm has been stale for 1 days.",
     "type": "commitment",
@@ -53,45 +53,45 @@
         "title": "Design drift score algorithm",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:31:31Z"
+        "last_commit_date": "2026-05-31T15:32:44Z"
       },
       {
         "task_id": "ENG-5",
         "title": "Set up CI/CD pipeline",
         "status": "Todo",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:31:31Z"
+        "last_commit_date": "2026-05-31T15:32:44Z"
       },
       {
         "task_id": "ENG-3",
         "title": "Write API documentation",
         "status": "Todo",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:31:31Z"
+        "last_commit_date": "2026-05-31T15:32:44Z"
       },
       {
         "task_id": "ENG-2",
         "title": "Fix dashboard crash on load",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:31:31Z"
+        "last_commit_date": "2026-05-31T15:32:44Z"
       },
       {
         "task_id": "ENG-1",
         "title": "Implement auth flow",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:31:31Z"
+        "last_commit_date": "2026-05-31T15:32:44Z"
       }
     ],
     "staleness": [],
     "drift": []
   },
-  "insight": "Developer has a moderate attention debt spike, primarily due to 5 stale tasks (notably ENG-6) and 3 unaddressed Notion document reviews blocking teammates.",
+  "insight": "AGP has moderate attention debt, primarily due to stale tasks and unaddressed messages. Key themes include delayed reviews of Notion documents and stalled progress on critical tasks like the drift score algorithm design.",
   "suggested_plan": [
-    "Immediately review and respond to the 3 Notion document updates from @Teammate (Onboarding Guide, Sprint Planning May, Drift Product Spec) to unblock collaborators.",
-    "Prioritize completing ENG-6 'Design drift score algorithm' (stale 1 day) as the top task, given its explicit priority in the report.",
-    "Schedule 30 minutes to triage the remaining stale tasks (ENG-5, ENG-3) by either updating their status or breaking them into smaller actionable items.",
-    "Set a daily 15-minute reminder to check for new attention debt items, focusing on reply and commitment debts first."
+    "Immediately address the stale task ENG-6 'Design drift score algorithm' by either updating its status, breaking it into smaller subtasks, or scheduling time to complete it today.",
+    "Review and respond to the 3 Notion document updates from @Teammate (Onboarding Guide, Sprint Planning May, Drift Product Spec) to unblock collaboration.",
+    "Prioritize ENG-5 'Set up CI/CD pipeline' or ENG-3 'Write API documentation' by assigning a deadline or delegating if time is constrained.",
+    "Schedule a 30-minute block to triage all stale tasks and messages to prevent further accumulation of attention debt."
   ]
 }
