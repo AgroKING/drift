@@ -1,47 +1,61 @@
 {
-  "generated_at": "2026-05-30T10:37:00Z",
+  "generated_at": "2026-05-31T15:24:29Z",
   "user": "A G P",
-  "score": 60,
-  "score_delta": -40,
+  "score": 10,
+  "score_delta": -60,
   "top_action": {
-    "text": "Reply to ZansSux in C0B616280CF: ENG-02 dashboard crash still happening in prod, anyone looked at it?",
-    "type": "reply",
+    "text": "Update ENG-6: Design drift score algorithm has been stale for 1 days.",
+    "type": "commitment",
     "url": ""
   },
   "debts": {
     "review": [],
-    "reply": [
+    "reply": [],
+    "commitment": [
       {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 365,
-        "preview": "ENG-02 dashboard crash still happening in prod, anyone looked at it?"
+        "task_id": "ENG-6",
+        "title": "Design drift score algorithm",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:24:29Z"
       },
       {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "ZansSux",
-        "days_ago": 365,
-        "preview": "can someone approve the deploy? I pushed a fix for ENG-02 this morning"
+        "task_id": "ENG-5",
+        "title": "Set up CI/CD pipeline",
+        "status": "Todo",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:24:29Z"
       },
       {
-        "source": "slack",
-        "channel": "C0B616280CF",
-        "from": "teammate2",
-        "days_ago": 364,
-        "preview": "heads up: CI is failing on main, don't merge anything yet"
+        "task_id": "ENG-3",
+        "title": "Write API documentation",
+        "status": "Todo",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:24:29Z"
+      },
+      {
+        "task_id": "ENG-2",
+        "title": "Fix dashboard crash on load",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:24:29Z"
+      },
+      {
+        "task_id": "ENG-1",
+        "title": "Implement auth flow",
+        "status": "In Progress",
+        "days_stale": 1,
+        "last_commit_date": "2026-05-31T15:24:29Z"
       }
     ],
-    "commitment": [],
     "staleness": [],
     "drift": []
   },
-  "insight": "High attention debt primarily due to unaddressed critical messages from over a year ago, including a production issue (ENG-02) and a blocked deploy, alongside a CI failure alert that may still be relevant.",
+  "insight": "Developer has significantly reduced attention debt (score delta -60) but still has 5 stale tasks, with ENG-6 as the top priority due to its recent staleness and 'In Progress' status.",
   "suggested_plan": [
-    "Immediately reply to @ZansSux in Slack channel C0B616280CF to confirm status of ENG-02 (dashboard crash) and whether the fix deployed or needs further action.",
-    "Check if the CI failure on main (flagged by @teammate2) was resolved; if not, triage or escalate to the team in C0B616280CF.",
-    "Follow up with @ZansSux in C0B616280CF to verify if the deploy approval for ENG-02 is still needed or if the issue is resolved.",
-    "Set a reminder to review and clear Slack messages weekly to prevent future attention debt buildup."
+    "Immediately update the status or add a comment to ENG-6 'Design drift score algorithm' to reflect progress or blockers, as it is the most urgent stale task.",
+    "Schedule 1 hour today to address ENG-5 'Set up CI/CD pipeline'—break it into subtasks if needed and update its status to 'In Progress'.",
+    "Review ENG-3 'Write API documentation' and either delegate, deprioritize, or set a concrete deadline for completion within the next 2 days.",
+    "Block 30 minutes to triage the remaining stale tasks (if any) and update their statuses or communicate next steps to the team."
   ]
 }

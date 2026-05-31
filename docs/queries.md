@@ -1,6 +1,6 @@
 # Drift Database Queries and Pipeline
 
-This document explains how Drift fetches data from developer tools (GitHub, Linear, and Slack) using the Coral MCP SQL interface, and how those queries are integrated into our reporting pipeline.
+This document explains how Drift fetches data from developer tools (GitHub and Linear) using the Coral MCP SQL interface, and how those queries are integrated into our reporting pipeline.
 
 ## The Query Pipeline
 
@@ -51,8 +51,8 @@ SELECT
   assignee_name, 
   updated_at, 
   description 
-FROM linear_mock.issues 
-WHERE assignee_name = '{github_username}';
+FROM linear.issues 
+WHERE assignee_name = '{linear_display_name}';
 ```
 
 - **Commitment Debt:** Active tasks where `state_name` is in `('In Progress', 'Todo', 'Blocked')`.
@@ -60,19 +60,5 @@ WHERE assignee_name = '{github_username}';
 
 ---
 
-## 3. Slack Messages
+Slack integration is currently not configured or disabled.
 
-We query Slack messages to detect threads or channel discussions that mention open PRs or need replies:
-
-```sql
-SELECT 
-  channel, 
-  text, 
-  user, 
-  ts, 
-  thread_ts 
-FROM slack_messages.messages;
-```
-
-- **Slack Mentions:** Checked by matching PR numbers or HTML URLs inside message texts.
-- **Reply Debt:** Filtered in Python to find messages that don't have thread replies from the developer.

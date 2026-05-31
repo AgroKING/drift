@@ -39,7 +39,8 @@ async def fetch_table_rows(coral: CoralClient, sql_query: str, table_name: str) 
 
 
 async def run_agent_loop(
-    github_username: str, user_name: str, owner: str, repo: str
+    github_username: str, user_name: str, owner: str, repo: str,
+    linear_display_name: str | None = None,
 ) -> DriftReport:
     print("Starting Drift Direct Query Pipeline...")
 
@@ -47,13 +48,11 @@ async def run_agent_loop(
         pulls_sql = f"SELECT number, title, user__login, state, html_url, requested_reviewer_logins, created_at, updated_at, review_comments, body FROM github.pulls WHERE owner = '{owner}' AND repo = '{repo}'"
         pulls = await fetch_table_rows(coral, pulls_sql, "pulls from github")
 
-        issues_sql = f"SELECT identifier, title, state_name, assignee_name, updated_at, description FROM linear_mock.issues WHERE assignee_name = '{github_username}'"
+        linear_user = linear_display_name or user_name
+        issues_sql = f"SELECT identifier, title, state_name, assignee_name, updated_at, description FROM linear.issues WHERE assignee_name = '{linear_user}'"
         issues = await fetch_table_rows(coral, issues_sql, "issues from linear")
 
-        slack_sql = (
-            "SELECT channel, text, user, ts, thread_ts FROM slack_messages.messages"
-        )
-        slack = await fetch_table_rows(coral, slack_sql, "messages from slack")
+        slack = []
 
         now = datetime.now(timezone.utc)
 

@@ -4,6 +4,11 @@ import json
 import os
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
 from .agent_loop import run_agent_loop
 from .report_writer import validate_and_write_report
 from drift_logic.report import build_drift_report
@@ -67,6 +72,7 @@ async def run_scan(args):
     user_name = args.user_name or os.getenv("DRIFT_USER_NAME", "A G P")
     owner = args.owner or os.getenv("GITHUB_OWNER", "AgroKING")
     repo = args.repo or os.getenv("GITHUB_REPO", "drift")
+    linear_display_name = args.linear_name or os.getenv("DRIFT_LINEAR_NAME")
 
     print("Running in LIVE mode.")
     print(
@@ -75,7 +81,8 @@ async def run_scan(args):
 
     try:
         report_model = await run_agent_loop(
-            github_username=github_username, user_name=user_name, owner=owner, repo=repo
+            github_username=github_username, user_name=user_name, owner=owner, repo=repo,
+            linear_display_name=linear_display_name,
         )
 
         success = validate_and_write_report(report_model, output_path)
@@ -137,6 +144,7 @@ def main():
         "--github-username", help="GitHub username of the developer"
     )
     scan_parser.add_argument("--user-name", help="Display name of the developer")
+    scan_parser.add_argument("--linear-name", help="Linear display name (for issue filtering)")
     scan_parser.add_argument("--owner", help="GitHub owner/organization")
     scan_parser.add_argument("--repo", help="GitHub repository name")
 

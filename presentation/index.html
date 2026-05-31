@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drift — Developer Attention Debt Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #08090e;
+      --bg-elevated: #101218;
+      --bg-card: rgba(255, 255, 255, 0.025);
+      --bg-card-hover: rgba(255, 255, 255, 0.055);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 255, 255, 0.12);
+      --text-primary: #e8ecf4;
+      --text-secondary: #8b95a8;
+      --text-muted: #545e72;
+
+      --accent-primary: #5b8def;
+      --accent-secondary: #7c6cf0;
+      --accent-warm: #e8845a;
+      --gradient-hero: linear-gradient(135deg, #5b8def 0%, #7c6cf0 40%, #c06cf0 100%);
+
+      --cat-review: #e05555;
+      --cat-reply: #e08a3e;
+      --cat-commit: #d4a72c;
+      --cat-stale: #4a90d9;
+      --cat-drift: #8b6cf0;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: 'Outfit', 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .material-symbols-rounded {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .icon-filled {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* ── Ambient Background ── */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .ambient-orb {
+      position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.07;
+    }
+    .orb-1 { width: 700px; height: 700px; background: #5b8def; top: -300px; left: -200px; animation: orbDrift 25s ease-in-out infinite; }
+    .orb-2 { width: 500px; height: 500px; background: #7c6cf0; bottom: -200px; right: -150px; animation: orbDrift 25s ease-in-out infinite reverse; }
+    .orb-3 { width: 350px; height: 350px; background: #c06cf0; top: 40%; left: 55%; animation: orbDrift 30s ease-in-out infinite 5s; }
+
+    @keyframes orbDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -25px) scale(1.04); }
+      66% { transform: translate(-20px, 15px) scale(0.96); }
+    }
+
+    /* ── Grain Overlay ── */
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    /* ── Slides ── */
+    .slides-wrapper { position: relative; width: 100vw; height: 100vh; z-index: 2; }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 60px 80px;
+      opacity: 0; transform: translateY(20px) scale(0.98);
+      transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .slide.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+    /* ── Stagger ── */
+    .si { opacity: 0; transform: translateY(18px); transition: opacity 0.45s ease, transform 0.45s ease; }
+    .slide.active .si { opacity: 1; transform: translateY(0); }
+    .slide.active .si:nth-child(1) { transition-delay: 0.08s; }
+    .slide.active .si:nth-child(2) { transition-delay: 0.16s; }
+    .slide.active .si:nth-child(3) { transition-delay: 0.24s; }
+    .slide.active .si:nth-child(4) { transition-delay: 0.32s; }
+    .slide.active .si:nth-child(5) { transition-delay: 0.40s; }
+    .slide.active .si:nth-child(6) { transition-delay: 0.48s; }
+    .slide.active .si:nth-child(7) { transition-delay: 0.56s; }
+    .slide.active .si:nth-child(8) { transition-delay: 0.64s; }
+
+    /* ── Typography ── */
+    .h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1;
+    }
+    .h2 { font-size: 1.15rem; color: var(--text-secondary); font-weight: 400; line-height: 1.65; max-width: 680px; }
+    .accent { color: var(--accent-primary); }
+    .gradient-text {
+      background: var(--gradient-hero);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted);
+    }
+
+    /* ── Glass Card ── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 16px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .card:hover { background: var(--bg-card-hover); border-color: var(--border-active); }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 100;
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 18px; border-radius: 100px;
+      background: rgba(16, 18, 24, 0.9); border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+    }
+    .nav-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--text-muted); border: none; cursor: pointer;
+      transition: all 0.25s;
+    }
+    .nav-dot.active {
+      background: var(--accent-primary); width: 24px; border-radius: 4px;
+      box-shadow: 0 0 10px rgba(91, 141, 239, 0.4);
+    }
+    .nav-dot:hover:not(.active) { background: var(--text-secondary); }
+    .nav-btn {
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; padding: 4px; border-radius: 6px; transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .nav-counter {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); margin-left: 6px;
+    }
+
+    /* ── Teleprompter ── */
+    .tp {
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+      max-width: 780px; width: 88%; z-index: 100;
+      padding: 12px 22px; border-radius: 12px;
+      background: rgba(16, 18, 24, 0.94); border: 1px solid rgba(91, 141, 239, 0.15);
+      backdrop-filter: blur(16px);
+      font-size: 0.78rem; color: rgba(91, 141, 239, 0.85); line-height: 1.65; text-align: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .tp.on { opacity: 1; pointer-events: auto; }
+    .tp-label { font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 4px; }
+    .tp-toggle {
+      position: fixed; top: 14px; right: 20px; z-index: 101;
+      background: rgba(16, 18, 24, 0.85); border: 1px solid var(--border-subtle);
+      color: var(--text-muted); font-size: 0.68rem; font-family: 'Outfit', sans-serif;
+      padding: 7px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+      backdrop-filter: blur(12px); display: flex; align-items: center; gap: 5px;
+    }
+    .tp-toggle:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+
+    .hint {
+      position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+      font-size: 0.65rem; color: var(--text-muted); z-index: 100; opacity: 0.5;
+    }
+    kbd {
+      padding: 2px 7px; border-radius: 4px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    }
+
+    /* ═══════════════════════════════════════
+       SLIDE 1 — TITLE
+       ═══════════════════════════════════════ */
+    .hero-logo {
+      width: 100px; height: 100px; margin-bottom: 28px;
+      animation: logoHover 5s ease-in-out infinite;
+    }
+    @keyframes logoHover {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .hero-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 5rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+    }
+    .hero-sub {
+      font-size: 1.3rem; color: var(--text-secondary); font-weight: 300; margin-top: 10px;
+    }
+    .hero-tagline {
+      font-size: 1.05rem; color: var(--text-muted); font-weight: 400; margin-top: 6px;
+      font-style: italic;
+    }
+    .hero-badge {
+      margin-top: 36px; padding: 8px 20px; border-radius: 100px;
+      border: 1px solid var(--border-subtle); background: var(--bg-card);
+      font-size: 0.8rem; color: var(--text-muted); font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════
+       SLIDE 2 — PROBLEM
+       ═══════════════════════════════════════ */
+    .problem-layout {
+      display: grid; grid-template-columns: 240px 1fr; gap: 48px;
+      width: 100%; max-width: 1060px; align-items: start;
+    }
+    .silo-stack { display: flex; flex-direction: column; gap: 8px; }
+    .silo {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 12px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      font-size: 0.92rem; font-weight: 500;
+    }
+    .silo .material-symbols-rounded { font-size: 1.3rem; color: var(--text-muted); }
+    .silo-line { width: 1px; height: 12px; background: var(--border-subtle); margin-left: 22px; }
+
+    .pain-list { display: flex; flex-direction: column; gap: 14px; }
+    .pain-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      font-size: 1rem; line-height: 1.55; color: var(--text-secondary);
+    }
+    .pain-bar { width: 3px; border-radius: 3px; flex-shrink: 0; min-height: 24px; margin-top: 3px; }
+
+    .callout {
+      grid-column: 1 / -1; margin-top: 20px;
+      padding: 16px 22px; border-radius: 12px;
+      border-left: 3px solid var(--accent-secondary);
+      background: rgba(124, 108, 240, 0.04);
+      font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════
+       SLIDE 3 — SOLUTION
+       ═══════════════════════════════════════ */
+    .categories {
+      display: flex; gap: 12px; width: 100%; max-width: 1060px; margin-top: 16px;
+    }
+    .cat-card {
+      flex: 1; padding: 20px 16px 18px; border-radius: 14px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-top: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .cat-card:hover { background: var(--bg-card-hover); transform: translateY(-3px); }
+    .cat-card .material-symbols-rounded {
+      font-size: 1.5rem; margin-bottom: 10px; display: block;
+    }
+    .cat-card .cat-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; }
+    .cat-card .cat-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.45; }
+
+    .cat-review { border-top-color: var(--cat-review); }
+    .cat-review .material-symbols-rounded { color: var(--cat-review); }
+    .cat-review .cat-name { color: var(--cat-review); }
+    .cat-reply { border-top-color: var(--cat-reply); }
+    .cat-reply .material-symbols-rounded { color: var(--cat-reply); }
+    .cat-reply .cat-name { color: var(--cat-reply); }
+    .cat-commit { border-top-color: var(--cat-commit); }
+    .cat-commit .material-symbols-rounded { color: var(--cat-commit); }
+    .cat-commit .cat-name { color: var(--cat-commit); }
+    .cat-stale { border-top-color: var(--cat-stale); }
+    .cat-stale .material-symbols-rounded { color: var(--cat-stale); }
+    .cat-stale .cat-name { color: var(--cat-stale); }
+    .cat-drift { border-top-color: var(--cat-drift); }
+    .cat-drift .material-symbols-rounded { color: var(--cat-drift); }
+    .cat-drift .cat-name { color: var(--cat-drift); }
+
+    .features-row {
+      display: flex; gap: 24px; margin-top: 28px;
+      width: 100%; max-width: 1060px;
+    }
+    .feat {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.88rem; color: var(--text-secondary);
+    }
+    .feat .material-symbols-rounded { font-size: 1.1rem; color: var(--accent-primary); }
+
+    /* ═══════════════════════════════════════
+       SLIDE 4 — ARCHITECTURE
+       ═══════════════════════════════════════ */
+    .arch-grid {
+      display: grid; grid-template-columns: 1fr 320px; gap: 36px;
+      width: 100%; max-width: 1060px; align-items: start;
+    }
+    .arch-img-wrap {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: #f5f7fa; padding: 12px;
+    }
+    .arch-img-wrap img { width: 100%; border-radius: 8px; display: block; }
+
+    .stack-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
+    .stack-table td {
+      padding: 9px 13px; font-size: 0.82rem;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+    }
+    .stack-table td:first-child {
+      font-weight: 700; color: var(--accent-primary); border-radius: 8px 0 0 8px;
+      width: 100px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .stack-table td:last-child { border-radius: 0 8px 8px 0; color: var(--text-secondary); }
+
+    /* ═══════════════════════════════════════
+       SLIDE 5 — DEMO
+       ═══════════════════════════════════════ */
+    .demo-wrap { width: 100%; max-width: 960px; }
+    .browser-frame {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .browser-bar {
+      display: flex; align-items: center; gap: 7px;
+      padding: 10px 16px; background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #e05555; } .dot-y { background: #d4a72c; } .dot-g { background: #3fb950; }
+    .url-bar {
+      flex: 1; margin-left: 10px; padding: 5px 12px; border-radius: 6px;
+      background: rgba(255,255,255,0.03);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted);
+    }
+
+    .demo-viewport {
+      min-height: 400px; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 36px;
+      background: linear-gradient(150deg, #0c0f18 0%, #12102a 50%, #0f1220 100%);
+    }
+
+    .score-ring {
+      width: 140px; height: 140px; border-radius: 50%;
+      border: 5px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; margin-bottom: 16px;
+    }
+    .score-ring::after {
+      content: ''; position: absolute; inset: -5px; border-radius: 50%;
+      border: 5px solid transparent;
+      border-top-color: var(--accent-primary); border-right-color: var(--accent-secondary);
+      animation: ringSpin 3s linear infinite;
+    }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+
+    .score-num {
+      font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .score-lbl { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .score-delta { font-size: 0.8rem; color: var(--cat-review); font-weight: 600; margin-top: 4px; }
+
+    .action-bar {
+      width: 100%; max-width: 480px; margin-top: 16px;
+      padding: 12px 18px; border-radius: 10px;
+      background: rgba(224, 85, 85, 0.08); border: 1px solid rgba(224, 85, 85, 0.15);
+      font-size: 0.8rem; color: #fca5a5; text-align: left;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .action-bar .material-symbols-rounded { color: var(--cat-review); font-size: 1.1rem; }
+    .action-bar strong { color: var(--cat-review); }
+
+    .mini-row {
+      display: flex; gap: 8px; margin-top: 18px; width: 100%; max-width: 480px;
+    }
+    .mini {
+      flex: 1; padding: 10px 8px; border-radius: 10px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .mini .material-symbols-rounded { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+    .mini-val { font-size: 1.3rem; font-weight: 800; }
+    .mini-lbl { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+    .demo-tags {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; justify-content: center;
+    }
+    .demo-tag {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.7rem; color: var(--text-muted);
+      padding: 5px 10px; border-radius: 6px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+    }
+    .demo-tag .material-symbols-rounded { font-size: 0.9rem; color: var(--accent-primary); }
+
+    /* ═══════════════════════════════════════
+       SLIDE 6 — DIFFERENTIATORS
+       ═══════════════════════════════════════ */
+    .diff-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; width: 100%; max-width: 1060px; margin-top: 16px;
+    }
+    .diff-card {
+      padding: 28px 22px; border-radius: 16px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      transition: all 0.35s;
+    }
+    .diff-card:hover { background: var(--bg-card-hover); transform: translateY(-4px); border-color: var(--border-active); }
+    .diff-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .diff-icon .material-symbols-rounded { font-size: 1.5rem; }
+    .diff-icon-1 { background: rgba(91, 141, 239, 0.1); color: var(--accent-primary); }
+    .diff-icon-1 .material-symbols-rounded { color: var(--accent-primary); }
+    .diff-icon-2 { background: rgba(124, 108, 240, 0.1); }
+    .diff-icon-2 .material-symbols-rounded { color: var(--accent-secondary); }
+    .diff-icon-3 { background: rgba(59, 185, 80, 0.1); }
+    .diff-icon-3 .material-symbols-rounded { color: #3fb950; }
+    .diff-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .diff-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .diff-desc strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ═══════════════════════════════════════
+       SLIDE 7 — LEARNINGS
+       ═══════════════════════════════════════ */
+    .learn-list {
+      display: flex; flex-direction: column; gap: 16px;
+      width: 100%; max-width: 860px; margin-top: 12px;
+    }
+    .learn-item {
+      display: flex; gap: 18px; padding: 22px;
+      border-radius: 14px; background: var(--bg-card); border: 1px solid var(--border-subtle);
+      transition: all 0.3s;
+    }
+    .learn-item:hover { background: var(--bg-card-hover); border-color: var(--border-active); }
+    .learn-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .learn-icon .material-symbols-rounded { font-size: 1.3rem; }
+    .li-1 { background: rgba(232, 132, 90, 0.1); }
+    .li-1 .material-symbols-rounded { color: var(--accent-warm); }
+    .li-2 { background: rgba(91, 141, 239, 0.1); }
+    .li-2 .material-symbols-rounded { color: var(--accent-primary); }
+    .li-3 { background: rgba(124, 108, 240, 0.1); }
+    .li-3 .material-symbols-rounded { color: var(--accent-secondary); }
+    .learn-content h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .learn-content p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+    .closing { margin-top: 32px; text-align: center; }
+    .closing-line {
+      font-size: 1.35rem; font-weight: 300; color: var(--text-secondary);
+    }
+    .closing-line em {
+      font-style: normal; font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .closing-repo {
+      margin-top: 14px; display: inline-block;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-muted);
+      padding: 8px 20px; border-radius: 100px;
+      border: 1px solid var(--border-subtle); background: var(--bg-card);
+    }
+
+    @media (max-width: 900px) {
+      .slide { padding: 28px 20px; }
+      .hero-name { font-size: 3.2rem; }
+      .h1 { font-size: 2rem; }
+      .problem-layout, .arch-grid { grid-template-columns: 1fr; }
+      .categories { flex-wrap: wrap; }
+      .diff-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+  <div class="grain"></div>
+
+  <button class="tp-toggle" onclick="toggleTP()">
+    <span class="material-symbols-rounded" style="font-size:0.9rem">teleprompter</span> Script (T)
+  </button>
+
+  <div class="tp" id="tp">
+    <div class="tp-label">Narration Script</div>
+    <div id="tp-text"></div>
+  </div>
+
+  <div class="slides-wrapper">
+
+    <!-- ═══ SLIDE 1: TITLE ═══ -->
+    <div class="slide active" data-script="Hey, I'm [Your Name]. This is Drift — a personal agent that tracks your attention debt across the developer tools you use every day.">
+      <img src="logo.png" alt="Drift" class="hero-logo si" />
+      <div class="hero-name gradient-text si">DRIFT</div>
+      <div class="hero-sub si">Developer Attention Debt Tracker</div>
+      <div class="hero-tagline si">Your invisible debt, made visible.</div>
+      <div class="hero-badge si">Coral Hackathon 2026 · Track 2: Personal Agent</div>
+    </div>
+
+    <!-- ═══ SLIDE 2: PROBLEM ═══ -->
+    <div class="slide" data-script="As developers, we work across GitHub, Slack, Linear, and Notion every day. But none of these tools talk to each other. So things slip through the cracks — a PR you were supposed to review three days ago, a Slack mention you never replied to, a sprint task you said you'd do but never started. The worst part? A task can say 'Done' in Linear while its pull request is still open on GitHub. No single tool catches that. We call this attention debt — and just like tech debt, it compounds silently.">
+      <div class="h1 si">The Problem: <span class="gradient-text">Invisible Attention Debt</span></div>
+      <div style="height: 20px;"></div>
+      <div class="problem-layout">
+        <div class="silo-stack si">
+          <div class="silo"><span class="material-symbols-rounded icon-filled">code</span> GitHub</div>
+          <div class="silo-line"></div>
+          <div class="silo"><span class="material-symbols-rounded icon-filled">chat</span> Slack</div>
+          <div class="silo-line"></div>
+          <div class="silo"><span class="material-symbols-rounded icon-filled">task_alt</span> Linear</div>
+          <div class="silo-line"></div>
+          <div class="silo"><span class="material-symbols-rounded icon-filled">edit_note</span> Notion</div>
+        </div>
+        <div class="pain-list">
+          <div class="pain-item si">
+            <div class="pain-bar" style="background: var(--cat-review);"></div>
+            <span>PRs assigned to you that you <strong style="color:var(--text-primary)">forgot to review</strong></span>
+          </div>
+          <div class="pain-item si">
+            <div class="pain-bar" style="background: var(--cat-reply);"></div>
+            <span>Slack mentions you <strong style="color:var(--text-primary)">never replied to</strong></span>
+          </div>
+          <div class="pain-item si">
+            <div class="pain-bar" style="background: var(--cat-commit);"></div>
+            <span>Sprint tasks you claimed but <strong style="color:var(--text-primary)">never started</strong></span>
+          </div>
+          <div class="pain-item si">
+            <div class="pain-bar" style="background: var(--cat-drift);"></div>
+            <span>A task marked <strong class="accent">"Done"</strong> in Linear — but the PR is still <strong style="color:var(--cat-review)">open</strong> on GitHub</span>
+          </div>
+        </div>
+        <div class="callout si">
+          "No single tool sees the full picture. This invisible debt compounds silently — blocking teammates and eroding sprint velocity."
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 3: SOLUTION ═══ -->
+    <div class="slide" data-script="Drift solves this by scanning across all four tools and categorizing your debt into five buckets — Review Debt for PRs you haven't reviewed, Reply Debt for unanswered mentions, Commitment Debt for tasks with no matching Git activity, Staleness Debt for your own PRs that went cold, and Drift Debt for cross-tool contradictions. It calculates a single attention debt score from 0 to 100, generates an AI-powered summary, and tells you exactly what to act on first.">
+      <div class="h1 si">What <span class="gradient-text">Drift</span> Does</div>
+      <div class="categories">
+        <div class="cat-card card cat-review si">
+          <span class="material-symbols-rounded icon-filled">rate_review</span>
+          <div class="cat-name">Review Debt</div>
+          <div class="cat-desc">PRs you haven't reviewed</div>
+        </div>
+        <div class="cat-card card cat-reply si">
+          <span class="material-symbols-rounded icon-filled">reply</span>
+          <div class="cat-name">Reply Debt</div>
+          <div class="cat-desc">@mentions you haven't replied to</div>
+        </div>
+        <div class="cat-card card cat-commit si">
+          <span class="material-symbols-rounded icon-filled">pending_actions</span>
+          <div class="cat-name">Commitment Debt</div>
+          <div class="cat-desc">Tasks claimed, no Git activity</div>
+        </div>
+        <div class="cat-card card cat-stale si">
+          <span class="material-symbols-rounded icon-filled">schedule</span>
+          <div class="cat-name">Staleness Debt</div>
+          <div class="cat-desc">Your PRs with no reviews</div>
+        </div>
+        <div class="cat-card card cat-drift si">
+          <span class="material-symbols-rounded icon-filled">sync_problem</span>
+          <div class="cat-name">Drift Debt</div>
+          <div class="cat-desc">Cross-tool contradictions</div>
+        </div>
+      </div>
+      <div class="features-row si">
+        <div class="feat"><span class="material-symbols-rounded icon-filled">speed</span> Single score: 0 – 100</div>
+        <div class="feat"><span class="material-symbols-rounded icon-filled">auto_awesome</span> AI executive summary</div>
+        <div class="feat"><span class="material-symbols-rounded icon-filled">checklist</span> Prioritized action plan</div>
+        <div class="feat"><span class="material-symbols-rounded icon-filled">trending_up</span> Score history &amp; trends</div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 4: ARCHITECTURE ═══ -->
+    <div class="slide" data-script="Here's how it works. At the bottom, Coral — an open-source federated SQL engine — connects to GitHub's live API, and to Linear, Slack, and Notion data via local sources. It uses the Model Context Protocol over stdio to stream data up to our Python agent. The agent fetches data from each source, correlates it in Python — matching PRs to Slack mentions, linking Linear issues to GitHub PRs — and runs a deterministic scoring engine. Then it makes exactly one LLM call to Mistral to generate an executive summary and action plan. The result is a JSON report served to a glassmorphic web dashboard.">
+      <div class="h1 si">Tech Stack &amp; <span class="gradient-text">Architecture</span></div>
+      <div style="height: 14px;"></div>
+      <div class="arch-grid">
+        <div class="arch-img-wrap si">
+          <img src="architecture_diagram.png" alt="Drift Architecture" />
+        </div>
+        <div class="si">
+          <table class="stack-table">
+            <tr><td>Data</td><td>Coral — Federated SQL via MCP</td></tr>
+            <tr><td>Protocol</td><td>MCP over stdio</td></tr>
+            <tr><td>Backend</td><td>Python 3.11 + Pydantic v2</td></tr>
+            <tr><td>AI / LLM</td><td>Mistral AI (single-call)</td></tr>
+            <tr><td>Frontend</td><td>HTML5 + Tailwind + Vanilla JS</td></tr>
+            <tr><td>Alt UI</td><td>Flutter Web (Dart)</td></tr>
+            <tr><td>Scoring</td><td>Deterministic weighted engine</td></tr>
+            <tr><td>Data</td><td>JSONL + Pydantic models</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 5: DEMO ═══ -->
+    <div class="slide" data-script="Let me show you the dashboard. When it loads, you immediately see your attention debt score — 62 out of 100 in this case, up 12 points from yesterday. That's not good. Right at the top, it tells you the single most important action: Review PR number 42 — it's been waiting 3 days and is blocking a sprint task. Below that, the AI insight card gives you an executive summary and a prioritized 4-step plan. Scrolling down, each debt category shows the specific items — and every PR link is clickable, taking you straight to GitHub. We can toggle between mock data and live Coral queries, and the whole dashboard supports dark and light themes with smooth transitions.">
+      <div class="h1 si">Live <span class="gradient-text">Demo</span></div>
+      <div style="height: 10px;"></div>
+      <div class="demo-wrap si">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+            <div class="url-bar">localhost:8080 — Drift Dashboard</div>
+          </div>
+          <div class="demo-viewport">
+            <div class="score-lbl">Attention Debt Score</div>
+            <div class="score-ring">
+              <div class="score-num" id="score-el">62</div>
+            </div>
+            <div class="score-delta">
+              <span class="material-symbols-rounded" style="font-size:0.9rem; vertical-align: middle;">arrow_upward</span>
+              12 from yesterday
+            </div>
+            <div class="action-bar">
+              <span class="material-symbols-rounded icon-filled">bolt</span>
+              <span><strong>Top Action:</strong> Review PR #42 — waiting 3 days, blocking sprint task</span>
+            </div>
+            <div class="mini-row">
+              <div class="mini">
+                <span class="material-symbols-rounded icon-filled" style="color:var(--cat-review)">rate_review</span>
+                <div class="mini-val" style="color:var(--cat-review)">3</div>
+                <div class="mini-lbl">Review</div>
+              </div>
+              <div class="mini">
+                <span class="material-symbols-rounded icon-filled" style="color:var(--cat-reply)">reply</span>
+                <div class="mini-val" style="color:var(--cat-reply)">2</div>
+                <div class="mini-lbl">Reply</div>
+              </div>
+              <div class="mini">
+                <span class="material-symbols-rounded icon-filled" style="color:var(--cat-commit)">pending_actions</span>
+                <div class="mini-val" style="color:var(--cat-commit)">1</div>
+                <div class="mini-lbl">Commit</div>
+              </div>
+              <div class="mini">
+                <span class="material-symbols-rounded icon-filled" style="color:var(--cat-stale)">schedule</span>
+                <div class="mini-val" style="color:var(--cat-stale)">2</div>
+                <div class="mini-lbl">Stale</div>
+              </div>
+              <div class="mini">
+                <span class="material-symbols-rounded icon-filled" style="color:var(--cat-drift)">sync_problem</span>
+                <div class="mini-val" style="color:var(--cat-drift)">1</div>
+                <div class="mini-lbl">Drift</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-tags si">
+          <div class="demo-tag"><span class="material-symbols-rounded icon-filled">check_circle</span> Score count-up</div>
+          <div class="demo-tag"><span class="material-symbols-rounded icon-filled">check_circle</span> AI Insight card</div>
+          <div class="demo-tag"><span class="material-symbols-rounded icon-filled">check_circle</span> Clickable PR links</div>
+          <div class="demo-tag"><span class="material-symbols-rounded icon-filled">check_circle</span> MOCK / LIVE toggle</div>
+          <div class="demo-tag"><span class="material-symbols-rounded icon-filled">check_circle</span> Dark / Light theme</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 6: DIFFERENTIATORS ═══ -->
+    <div class="slide" data-script="Three things make Drift unique. First — cross-tool intelligence. It's the only tool that catches contradictions between your tools, like a task marked done when its PR is still open. Second — efficiency. We do all processing deterministically in Python and make exactly one LLM call for the summary. No expensive agent loops. And third — the entire stack runs at zero cost. Coral is open-source, all APIs are on free tiers.">
+      <div class="h1 si">What Sets Drift <span class="gradient-text">Apart</span></div>
+      <div class="diff-grid">
+        <div class="diff-card card si">
+          <div class="diff-icon diff-icon-1"><span class="material-symbols-rounded icon-filled">hub</span></div>
+          <div class="diff-title">Cross-Tool Intelligence</div>
+          <div class="diff-desc">The only tool that detects <strong>contradictions between tools</strong> — a task "Done" in Linear while its PR is still open in GitHub.</div>
+        </div>
+        <div class="diff-card card si">
+          <div class="diff-icon diff-icon-2"><span class="material-symbols-rounded icon-filled">bolt</span></div>
+          <div class="diff-title">Single LLM Call</div>
+          <div class="diff-desc">All data processing is <strong>deterministic</strong>. Exactly one LLM call for the summary — efficient, no expensive agent loops.</div>
+        </div>
+        <div class="diff-card card si">
+          <div class="diff-icon diff-icon-3"><span class="material-symbols-rounded icon-filled">savings</span></div>
+          <div class="diff-title">Zero-Cost Stack</div>
+          <div class="diff-desc">Coral is Apache 2.0 open-source. All APIs on free tiers. Mistral free tier. <strong>Total cost: $0</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 7: LEARNINGS ═══ -->
+    <div class="slide" data-script="The biggest learning was pragmatism — we originally planned complex cross-source SQL joins in Coral, but pivoted to fetching flat tables and correlating in Python. It's more robust and much easier to debug. We also got hands-on with MCP — the Model Context Protocol — for the first time, connecting our agent to live data sources. And building both a Flutter app and an HTML5 dashboard gave us true full-stack ownership. That's Drift — your invisible attention debt, made visible. Thank you!">
+      <div class="h1 si">Learnings &amp; <span class="gradient-text">Growth</span></div>
+      <div class="learn-list">
+        <div class="learn-item si">
+          <div class="learn-icon li-1"><span class="material-symbols-rounded icon-filled">architecture</span></div>
+          <div class="learn-content">
+            <h3>Pragmatic Architecture</h3>
+            <p>Pivoted from complex cross-source SQL JOINs in Coral to Python-side correlation — more robust and debuggable</p>
+          </div>
+        </div>
+        <div class="learn-item si">
+          <div class="learn-icon li-2"><span class="material-symbols-rounded icon-filled">cable</span></div>
+          <div class="learn-content">
+            <h3>MCP Protocol</h3>
+            <p>First time using Model Context Protocol — learned to bridge AI agents with real data sources via stdio</p>
+          </div>
+        </div>
+        <div class="learn-item si">
+          <div class="learn-icon li-3"><span class="material-symbols-rounded icon-filled">layers</span></div>
+          <div class="learn-content">
+            <h3>Full-Stack Ownership</h3>
+            <p>Built backend agent + scoring engine + AI integration + two frontend implementations (Flutter + HTML5) in one hackathon</p>
+          </div>
+        </div>
+      </div>
+      <div class="closing si">
+        <div class="closing-line">Your invisible debt, <em>made visible.</em></div>
+        <div class="closing-repo">github.com/AgroKING/drift</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Nav -->
+  <div class="nav">
+    <button class="nav-btn" onclick="go(-1)"><span class="material-symbols-rounded">chevron_left</span></button>
+    <div id="dots"></div>
+    <button class="nav-btn" onclick="go(1)"><span class="material-symbols-rounded">chevron_right</span></button>
+    <div class="nav-counter" id="ctr">1 / 7</div>
+  </div>
+  <div class="hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>T</kbd> toggle script</div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const N = slides.length;
+    let cur = 0, tpOn = false;
+
+    const dots = document.getElementById('dots');
+    for (let i = 0; i < N; i++) {
+      const d = document.createElement('button');
+      d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => jump(i);
+      dots.appendChild(d);
+    }
+
+    function jump(i) {
+      if (i < 0 || i >= N || i === cur) return;
+      slides[cur].classList.remove('active');
+      cur = i;
+      slides[cur].classList.add('active');
+      document.querySelectorAll('.nav-dot').forEach((d, j) => d.classList.toggle('active', j === cur));
+      document.getElementById('ctr').textContent = `${cur + 1} / ${N}`;
+      updateTP();
+    }
+    function go(d) { jump(cur + d); }
+
+    function updateTP() {
+      document.getElementById('tp-text').textContent = slides[cur].dataset.script || '';
+    }
+    function toggleTP() {
+      tpOn = !tpOn;
+      document.getElementById('tp').classList.toggle('on', tpOn);
+    }
+    updateTP();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
+      else if (e.key === 't' || e.key === 'T') toggleTP();
+      else if (e.key === 'Home') jump(0);
+      else if (e.key === 'End') jump(N - 1);
+    });
+
+    /* Score count-up on slide 5 */
+    const scoreEl = document.getElementById('score-el');
+    const target = 62;
+    function animateScore() {
+      let start = performance.now();
+      (function step(ts) {
+        const p = Math.min((ts - start) / 1400, 1);
+        scoreEl.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+        if (p < 1) requestAnimationFrame(step);
+      })(start);
+    }
+    new MutationObserver(() => {
+      if (slides[4].classList.contains('active')) setTimeout(animateScore, 350);
+    }).observe(slides[4], { attributes: true, attributeFilter: ['class'] });
+  </script>
+</body>
+</html>

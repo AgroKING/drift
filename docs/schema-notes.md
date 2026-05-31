@@ -9,9 +9,9 @@ This reference outlines the tables and fields exposed by our Coral MCP query eng
 We query a mix of live database schemas and local mock tables:
 
 - **GitHub:** Connected to live GitHub API columns.
-- **Linear:** Mocked via the `linear_mock.issues` table (using local JSONL data).
-- **Slack:** Mocked via the `slack_messages.messages` table (using local JSONL data).
-- **Notion:** Mocked via the `notion_mock.pages` table.
+- **Linear:** Connected to live Linear API columns.
+- **Notion:** Connected to live Notion API columns (integration pending in agent).
+- **Slack:** Not configured.
 
 ---
 
@@ -52,14 +52,8 @@ Linear active issues are queried from `linear_mock.issues`.
 
 ## 3. Slack Integration
 
-Slack messages are loaded from `slack_messages.messages`.
+Slack integration is currently not configured or disabled.
 
-### Key Fields Used:
-- `channel` (Utf8): The channel name/ID.
-- `text` (Utf8): Raw message content. We inspect this to see if a PR url or number is mentioned.
-- `user` (Utf8): The sender's username.
-- `ts` (Utf8): Unix timestamp string.
-- `thread_ts` (Utf8): Thread parent timestamp. Used to filter out message replies and match threads.
 
 ---
 

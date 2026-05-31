@@ -18,7 +18,7 @@ Houses the database-agnostic domain logic. It has zero network dependencies:
 ### 2. `drift_agent/` (Agent Pipeline & Orchestration)
 Handles all external interactions, CLI processing, and API connections:
 - [main.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/main.py): Entrypoint for CLI parsing. Configures arguments for username, repository targets, mock vs live modes, and output paths.
-- [agent_loop.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/agent_loop.py): Connects to the Coral Client, queries flat tables (`github.pulls`, `linear_mock.issues`, `slack_messages.messages`), parses and joins row data in Python, and returns a compiled `DriftReport` object.
+- [agent_loop.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/agent_loop.py): Connects to the Coral Client, queries flat tables (`github.pulls`, `linear.issues`), parses and joins row data in Python, and returns a compiled `DriftReport` object.
 - [insight_generator.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/insight_generator.py): Extracts report context, formats the LLM prompt, and requests exactly one JSON completion from the LLM containing the narrative and prioritized Suggested Plan list.
 - [llm_client.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/llm_client.py): Handles standard OpenAI/Mistral streaming connections, rotates fallback models on connectivity or parser errors, processes `Retry-After` headers on 429 errors, and implements random jitter.
 - [coral_client.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/coral_client.py): Implements standard JSON-RPC communication with the Coral MCP server stdio process.

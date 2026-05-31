@@ -19,13 +19,13 @@ The codebase is split into two primary components:
 
 ### 1. Direct Database Fetching (Python Processing)
 Rather than executing complex database-side SQL joins—which often fail or hit limitations on federated query planners—Drift queries flat schemas directly:
-- **GitHub:** `github.pulls` matches active pull requests in the target repository.
-- **Linear:** `linear_mock.issues` retrieves issues assigned to the developer.
-- **Slack:** `slack_messages.messages` retrieves workspace channel history.
+- **GitHub:** `github.pulls` retrieves active pull requests from the target repository (live API).
+- **Linear:** `linear.issues` retrieves issues assigned to the developer (live API).
+- **Notion:** `notion.pages` retrieves workspace documents (live API, pending agent integration).
+- **Slack:** Not configured.
 
 Once the rows are fetched, the Python logic layer ([agent_loop.py](file:///home/agp/PycharmProjects/drift/backend/drift_agent/agent_loop.py)) processes the datasets:
-- Maps GitHub PRs against Slack mentions and links them to blocking Linear issues.
-- Scans Slack threads to find messages where the developer has not yet replied.
+- Maps GitHub PRs and links them to blocking Linear issues.
 - Identifies state discrepancies (e.g., a task marked "Done" in Linear, but its linked GitHub PR is still open).
 
 ### 2. Attention Debt Scoring
