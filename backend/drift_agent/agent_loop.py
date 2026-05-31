@@ -54,6 +54,9 @@ async def run_agent_loop(
 
         slack = []
 
+        notion_sql = "SELECT id, last_edited_time, url, properties FROM notion.search WHERE object = 'page'"
+        notion_pages = await fetch_table_rows(coral, notion_sql, "pages from notion")
+
         now = datetime.now(timezone.utc)
 
         review_rows = []
@@ -120,6 +123,37 @@ async def run_agent_loop(
                     "from": m["user"],
                     "days_ago": days_ago,
                     "preview": m["text"],
+                }
+            )
+
+        for page in notion_pages:
+            edited_time = page.get("last_edited_time")
+            if not edited_time:
+                continue
+
+            days_ago = calculate_days_ago(edited_time, now)
+            # Only count as debt if edited within last 14 days
+            if days_ago > 14:
+                continue
+
+            # Extract title
+            title = "Untitled Page"
+            try:
+                import json
+                props = json.loads(page.get("properties") or "{}")
+                title_obj = props.get("title", {}).get("title", [])
+                if title_obj:
+                    title = "".join([t.get("plain_text", "") for t in title_obj]) or "Untitled Page"
+            except Exception:
+                pass
+
+            reply_rows.append(
+                {
+                    "source": "notion",
+                    "channel": title,
+                    "from": "Teammate",
+                    "days_ago": days_ago,
+                    "preview": f"Document updated. Review changes on Notion.",
                 }
             )
 

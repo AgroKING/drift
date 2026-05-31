@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-31T15:24:29Z",
+  "generated_at": "2026-05-31T15:31:31Z",
   "user": "A G P",
-  "score": 10,
-  "score_delta": -60,
+  "score": 20,
+  "score_delta": 10,
   "top_action": {
     "text": "Update ENG-6: Design drift score algorithm has been stale for 1 days.",
     "type": "commitment",
@@ -10,52 +10,88 @@
   },
   "debts": {
     "review": [],
-    "reply": [],
+    "reply": [
+      {
+        "source": "notion",
+        "channel": "Onboarding Guide",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Sprint Planning May",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Drift Product Spec",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "API Design Doc",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      },
+      {
+        "source": "notion",
+        "channel": "Scoring Algorithm Notes",
+        "from": "Teammate",
+        "days_ago": 1,
+        "preview": "Document updated. Review changes on Notion."
+      }
+    ],
     "commitment": [
       {
         "task_id": "ENG-6",
         "title": "Design drift score algorithm",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:24:29Z"
+        "last_commit_date": "2026-05-31T15:31:31Z"
       },
       {
         "task_id": "ENG-5",
         "title": "Set up CI/CD pipeline",
         "status": "Todo",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:24:29Z"
+        "last_commit_date": "2026-05-31T15:31:31Z"
       },
       {
         "task_id": "ENG-3",
         "title": "Write API documentation",
         "status": "Todo",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:24:29Z"
+        "last_commit_date": "2026-05-31T15:31:31Z"
       },
       {
         "task_id": "ENG-2",
         "title": "Fix dashboard crash on load",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:24:29Z"
+        "last_commit_date": "2026-05-31T15:31:31Z"
       },
       {
         "task_id": "ENG-1",
         "title": "Implement auth flow",
         "status": "In Progress",
         "days_stale": 1,
-        "last_commit_date": "2026-05-31T15:24:29Z"
+        "last_commit_date": "2026-05-31T15:31:31Z"
       }
     ],
     "staleness": [],
     "drift": []
   },
-  "insight": "Developer has significantly reduced attention debt (score delta -60) but still has 5 stale tasks, with ENG-6 as the top priority due to its recent staleness and 'In Progress' status.",
+  "insight": "Developer has a moderate attention debt spike, primarily due to 5 stale tasks (notably ENG-6) and 3 unaddressed Notion document reviews blocking teammates.",
   "suggested_plan": [
-    "Immediately update the status or add a comment to ENG-6 'Design drift score algorithm' to reflect progress or blockers, as it is the most urgent stale task.",
-    "Schedule 1 hour today to address ENG-5 'Set up CI/CD pipeline'—break it into subtasks if needed and update its status to 'In Progress'.",
-    "Review ENG-3 'Write API documentation' and either delegate, deprioritize, or set a concrete deadline for completion within the next 2 days.",
-    "Block 30 minutes to triage the remaining stale tasks (if any) and update their statuses or communicate next steps to the team."
+    "Immediately review and respond to the 3 Notion document updates from @Teammate (Onboarding Guide, Sprint Planning May, Drift Product Spec) to unblock collaborators.",
+    "Prioritize completing ENG-6 'Design drift score algorithm' (stale 1 day) as the top task, given its explicit priority in the report.",
+    "Schedule 30 minutes to triage the remaining stale tasks (ENG-5, ENG-3) by either updating their status or breaking them into smaller actionable items.",
+    "Set a daily 15-minute reminder to check for new attention debt items, focusing on reply and commitment debts first."
   ]
 }
